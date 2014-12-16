@@ -17,6 +17,8 @@ loading.prototype = {
         // insert the loading of all assets after this line, :
         // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
 
+// hey Elroy
+
     },
     create: function () {
         'use strict';
