@@ -18,6 +18,7 @@ loading.prototype = {
         // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
 
 // hey Elroy
+// andere text
 
     },
     create: function () {
