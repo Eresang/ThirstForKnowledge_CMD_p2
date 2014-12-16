@@ -24,6 +24,6 @@ loading.prototype = {
     create: function () {
         'use strict';
         // everything is loaded, time to start the game
-	// this.game.state.start("nextstate", true, false, true);
+	   this.game.state.start("Runner", true, false, true);
     }
 };
