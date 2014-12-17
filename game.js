@@ -10,12 +10,14 @@ runner.prototype = {
     create: function () {
         'use strict';
         game.stage.backgroundColor = "#9d00ff";
+        maingroup = game.add.group();
         initPlayer();
     },
     
     update: function () {
         'use strict';
         checkPlayerInput();
+        updateProjectiles();
     },
     
     init: function () {

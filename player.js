@@ -18,8 +18,7 @@ function initPlayer() {
     player.animations.add('character_move_down', [10, 11]);
     
     // add it to maingroup
-    //maingroup.add(player);
-    game.world.add(player);  //change to above line once maingroup has been made
+    maingroup.add(player);
 }
 
 // --------------------------------------------------------------------------------------
@@ -59,7 +58,8 @@ function checkPlayerInput() {
     
     // shooting
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-        player.animations.play('character_shoot', 10, false);
+        playerShoot();
+        //player.animations.play('character_shoot', 10, false);
         // enabletimer?
     }
 }

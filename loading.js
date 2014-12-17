@@ -16,6 +16,7 @@ loading.prototype = {
         
         // insert the loading of all assets after this line, :
         this.load.spritesheet('charactersheet', 'assets/charactersheet.png', 64, 64);
+        this.load.spritesheet('projectilesheet', 'assets/projectilesheet.png', 48, 24);
         // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
 
 // hey Elroy
