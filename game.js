@@ -1,4 +1,6 @@
 //the game state
+var player,
+    maingroup;
 
 var runner = function (game) {
     
