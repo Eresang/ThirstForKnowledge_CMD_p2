@@ -1,5 +1,4 @@
 var amountOfEnemies = 30;
-
 var enemyArray = [];
 
 function addEnemiesToArray () {
@@ -11,13 +10,6 @@ function addEnemiesToArray () {
         enemyArray.push(enemy);
         enemy.newhealth = 25;
     }
-}
-
-function addEnemiesToMaingroup () {
-    for (i = 0; i < enemyArray.length; i++) {
-        maingroup.create(enemyArray[i]);
-    }
-    console.log(maingroup.length);
 }
 
 var x = 0;
@@ -43,11 +35,4 @@ function spawnEnemy () {
         }
     }
 }
-
-/*function moveEnemies () {
-    for (var ding in enemyArray) {
-        ding.body.velocity.x = 50;
-        console.log("moving");
-    }
-}*/
 
