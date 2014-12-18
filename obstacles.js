@@ -5,7 +5,8 @@ function addObstaclesToArray () {
     for (i = 0; i < amountOfObstacles; i++) {
         obstacle = game.add.sprite(0, 0, "obstacle");
         game.physics.arcade.enable(obstacle);
-        obstacle.visible = true;
+        obstacle.visible = false;
+        obstacle.body.immovable = true;
         obstacleArray.push(obstacle);
     }
 }

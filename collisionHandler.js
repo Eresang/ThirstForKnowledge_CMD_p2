@@ -1,13 +1,17 @@
 function collisionHandler () {
     
-    //check collision between all enemies and obstacles    
-    for (i = 0; i < enemyArray.length; i++) {
-        for (j = 0; j < obstacleArray.length; j++) {
-            game.physics.arcade.collide(enemyArray[i], obstacleArray[j], sayHi);
-        }
-    }
+    //checks collision between enemies and obstacles
+    game.physics.arcade.collide(enemyArray, obstacleArray);
+    
+    //checks collision between the player and obstacles
+    game.physics.arcade.collide(player, obstacleArray);
+    
+    //check collision between bullets and enemies
+    //kills the bullet and enemy in the process
+    game.physics.arcade.collide(projectiles, enemyArray, killEnemy);
 }
 
-function sayHi () {
-    console.log("hoi");
+function killEnemy (projectile, enemy) {
+    projectile.kill();
+    enemy.kill();
 }
