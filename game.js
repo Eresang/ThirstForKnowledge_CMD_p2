@@ -11,6 +11,7 @@ runner.prototype = {
         'use strict';
         game.stage.backgroundColor = "#9d00ff";
         maingroup = game.add.group();
+        initProjectiles();
         initPlayer();
     },
     
