@@ -16,11 +16,13 @@ loading.prototype = {
         
         // insert the loading of all assets after this line, :
         // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
+        this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
+        this.load.image("obstacle", "assets/obstacle.png");
 
     },
     create: function () {
         'use strict';
         // everything is loaded, time to start the game
-	   this.game.state.start("Runner", true, false, true);
+        this.game.state.start("Runner", true, false, true);
     }
 };
