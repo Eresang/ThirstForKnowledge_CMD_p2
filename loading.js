@@ -18,6 +18,8 @@ loading.prototype = {
         this.load.spritesheet('charactersheet', 'assets/charactersheet.png', 64, 64);
         this.load.spritesheet('projectilesheet', 'assets/projectilesheet.png', 48, 64);
         // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
+        this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
+        this.load.image("obstacle", "assets/obstacle.png");
 
 // hey Elroy
 
@@ -25,6 +27,6 @@ loading.prototype = {
     create: function () {
         'use strict';
         // everything is loaded, time to start the game
-	   this.game.state.start("Runner", true, false, true);
+        this.game.state.start("Runner", true, false, true);
     }
 };
