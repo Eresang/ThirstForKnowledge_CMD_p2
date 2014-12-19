@@ -26,6 +26,9 @@ function initPlayer() {
     // add it to maingroup
     maingroup.add(player);
     
+    game.world.resize(gameWidth * 4, gameHeight * 4);
+    game.camera.follow(player);
+    
     pi_allowAnimation = true;
     
     kc_leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
