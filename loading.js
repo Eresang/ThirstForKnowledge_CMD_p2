@@ -16,11 +16,13 @@ loading.prototype = {
         
         // insert the loading of all assets after this line, :
         this.load.spritesheet('charactersheet', 'assets/charactersheet.png', 64, 64);
-        this.load.spritesheet('projectilesheet', 'assets/projectilesheet.png', 48, 64);
-        // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
+        this.load.spritesheet('ammosheet', 'assets/Ammo.png', 23, 17);
         this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
-        this.load.image("obstacle", "assets/Tafel.png");
-        this.load.image("smallobstacle", "assets/Vreemde plant.png");
+        
+        this.load.spritesheet("tables", "assets/Tables.png", 70, 43);
+        this.load.spritesheet("chairs", "assets/Chairs.png", 20, 30);
+        this.load.spritesheet("foliage", "assets/Foliage.png", 100, 51);
+        this.load.spritesheet("paraphernaliaA", "assets/Paraphernalia_A.png", 26, 32);
         
     },
     create: function () {

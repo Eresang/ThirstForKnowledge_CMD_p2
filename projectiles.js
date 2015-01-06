@@ -1,12 +1,3 @@
-var lowest = function (a, b) {
-    'use strict';
-    if (a < b) {
-        return (a);
-    } else {
-        return (b);
-    }
-};
-
 // functions and variables for every type of projectile put in array for easy retrieval
 var projectileTypes = [
         {   // geo weapon
@@ -14,7 +5,6 @@ var projectileTypes = [
             firerate: 15,
             speed: 800,
             frame: 0,
-            animation: 'ani_geo_ammo',
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
@@ -24,8 +14,7 @@ var projectileTypes = [
             source: {},
             firerate: 30,
             speed: 500,
-            frame: 1,
-            animation: 'ani_cata_ammo',
+            frame: 3,
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
@@ -35,12 +24,51 @@ var projectileTypes = [
             source: {},
             firerate: 20,
             speed: 300,
-            frame: 2,
-            animation: 'ani_pea_ammo',
+            frame: 6,
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
             collision: collisionProjectile3
+        },
+        {   // waterballoon weapon
+            source: {},
+            firerate: 60,
+            speed: 800,
+            frame: 9,
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile4
+        },
+        {   // paper plane weapon
+            source: {},
+            firerate: 30,
+            speed: 500,
+            frame: 12,
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile5
+        },
+        {   // stink bomb weapon
+            source: {},
+            firerate: 20,
+            speed: 300,
+            frame: 15,
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile6
+        },
+        {   // test tube weapon
+            source: {},
+            firerate: 20,
+            speed: 300,
+            frame: 18,
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile7
         }
     ];
 
@@ -60,7 +88,7 @@ function initProjectiles() {
     var i;
     projectiles.length = maxProjectileCount;
     for (i = 0; i < maxProjectileCount; i += 1) {
-        projectiles[i] = maingroup.create(0, 0, 'projectilesheet', 0);
+        projectiles[i] = maingroup.create(0, 0, 'ammosheet', 0);
         game.physics.arcade.enable(projectiles[i]);
         projectiles[i].anchor.setTo(0.0, 1.0);
         projectiles[i].checkWorldBounds = true;
@@ -115,16 +143,17 @@ function swapProjectile() {
 
 function createProjectile(shooter) {
     'use strict';
-    var p;
+    var p, t;
     p = getProjectile();
+    t = projectileTypes[selectedProjectile];
     if (p) {
         p.angle = 0;
         p.body.angle = 0;
         p.source = shooter;
-        p.collideHandler = projectileTypes[selectedProjectile].collision;
-        p.frame = projectileTypes[selectedProjectile].frame;
+        p.collideHandler = t.collision;
+        p.frame = t.frame + t.upgrade;
         p.reset(shooter.body.x, shooter.body.y);
-        p.body.velocity.x = projectileTypes[selectedProjectile].speed;
+        p.body.velocity.x = t.speed;
     }
 }
 
@@ -171,5 +200,11 @@ function collisionProjectile5(p, q) {
 //----------------------------------------------------------------
 // projectile type 6
 function collisionProjectile6(p, q) {
+    'use strict';
+}
+
+//----------------------------------------------------------------
+// projectile type 7
+function collisionProjectile7(p, q) {
     'use strict';
 }

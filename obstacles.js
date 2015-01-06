@@ -1,34 +1,213 @@
-var amountOfObstacles = 200;
-var obstacleArray = [];
+var maxObstacleCount = 200;
+var obstacles = [];
 
-function addObstaclesToArray () {
-    for (i = 0; i < amountOfObstacles; i++) {
-        obstacle = maingroup.create(0, 0);
-        game.physics.arcade.enable(obstacle);
-        obstacle.body.immovable = true;
-        obstacle.anchor.setTo(0.0, 1.0);
-        obstacleArray.push(obstacle);
-        obstacle.kill();
+// functions and variables for every type of projectile put in array for easy retrieval
+var obstacleTypes = [
+        {   // tables
+            sheet: 'tables',
+            bodyWidth: 70,
+            bodyHeight: 12,
+            bodyXOffset: 0,
+            bodyYOffset: 2,
+            bodyEnable: true,
+            collision: null
+        },
+        {   // chairs
+            sheet: 'chairs',
+            bodyWidth: 20,
+            bodyHeight: 7,
+            bodyXOffset: 0,
+            bodyYOffset: 2,
+            bodyEnable: true,
+            collision: null
+        },
+        {   // foliage
+            sheet: 'foliage',
+            bodyWidth: 15,
+            bodyHeight: 6,
+            bodyXOffset: 5,
+            bodyYOffset: 2,
+            bodyEnable: true,
+            collision: null
+        }, // here be paraphernalia
+        {   // full bucket
+            sheet: 'paraphernaliaA',
+            bodyWidth: 13,
+            bodyHeight: 6,
+            bodyXOffset: 0,
+            bodyYOffset: 0,
+            bodyEnable: true,
+            collision: collideWaterBucket
+        },
+        {   // empty bucket with spill
+            sheet: 'paraphernaliaA',
+            bodyWidth: 13,
+            bodyHeight: 6,
+            bodyXOffset: 0,
+            bodyYOffset: 0,
+            bodyEnable: true,
+            collision: null
+        },
+        {   // empty bucket
+            sheet: 'paraphernaliaA',
+            bodyWidth: 13,
+            bodyHeight: 6,
+            bodyXOffset: 0,
+            bodyYOffset: 0,
+            bodyEnable: true,
+            collision: null
+        },
+        {   // waterspill
+            sheet: 'paraphernaliaA',
+            bodyWidth: 0,
+            bodyHeight: 0,
+            bodyXOffset: 0,
+            bodyYOffset: 0,
+            bodyEnable: false,
+            collision: null
+        },
+        {   // trashbin
+            sheet: 'paraphernaliaA',
+            bodyWidth: 13,
+            bodyHeight: 8,
+            bodyXOffset: 7,
+            bodyYOffset: 2,
+            bodyEnable: true,
+            collision: null
+        },
+        {   // globe
+            sheet: 'paraphernaliaA',
+            bodyWidth: 19,
+            bodyHeight: 6,
+            bodyXOffset: 4,
+            bodyYOffset: 2,
+            bodyEnable: true,
+            collision: null
+        }
+    ];
+
+// --------------------------------------------------------------------------------------
+function initObstacles() {
+    'use strict';
+    var i;
+    obstacles.length = maxObstacleCount;
+    for (i = 0; i < maxObstacleCount; i += 1) {
+        obstacles[i] = maingroup.create(0, 0);
+        game.physics.arcade.enable(obstacles[i]);
+        obstacles[i].anchor.setTo(0.0, 1.0);
+        obstacles[i].body.immovable = true;
+        obstacles[i].checkWorldBounds = true;
+        obstacles[i].outOfBoundsKill = true;
+        obstacles[i].kill();
     }
 }
 
-function spawnObstacle (x, y, i) {
-            
-    obstacle = obstacleArray[i];
-    obstacle.reset(x, y);
-    obstacle.body.velocity.x = 0;
-}
-
-function killObstacles () {
-    for (i = 0; i < obstacleArray.length; i++) {
-        if (obstacleArray[i].x < game.camera.x - obstacleArray[i].width) {
-            obstacleArray[i].kill();
+function getObstacle() {
+    'use strict';
+    var i,
+        p = null;
+    
+    for (i = 0; i < maxObstacleCount; i += 1) {
+        if (obstacles[i].alive === false) {
+            p = obstacles[i];
+            return p;
         }
     }
-    
-    for (i = 0; i < enemyArray.length; i++) {
-        if (enemyArray[i].x < 0 - enemyArray[i].width) {
-            enemyArray[i].kill();
+    return p;
+}
+
+// --------------------------------------------------------------------------------------
+function createObstacle(o, t) {
+    'use strict';
+    if ((o) && (t)) {
+        o.angle = 0;
+        o.body.angle = 0;
+        o.body.setSize(t.bodyWidth, t.bodyHeight, t.bodyXOffset, t.bodyYOffset);
+        o.body.enable = t.bodyEnable;
+        o.loadTexture(t.sheet);
+        o.collideHandler = t.collision;
+    }    
+}
+
+function createChair(x, y, backFacing) {
+    'use strict';
+    var o, t;
+    o = getObstacle();
+    t = obstacleTypes[1];
+    createObstacle(o, t);
+    // set frame
+    if (backFacing) {
+        o.frame = 1;
+    } else {
+        o.frame = 0;
+    }
+    o.reset(x, y);
+}
+
+function createTable(x, y, withChairs) {
+    'use strict';
+    var o, t;
+    o = getObstacle();
+    t = obstacleTypes[0];
+    createObstacle(o, t);
+    // set frame, in such a way the table without stuff on it is most prevalent
+    o.frame = highest(0, Math.floor(Math.random() * 14) - 4);
+    o.reset(Math.floor(Math.random() * 3) + x - 1, Math.floor(Math.random() * 3) + y - 1);
+    if (withChairs) {
+        // max 4 chairs
+        if (Math.random() > 0.3) { // frontfacing A
+            createChair(Math.floor(Math.random() * 3) + x + 12, y - 2, false);
+        }
+        if (Math.random() > 0.3) { // frontfacing B
+            createChair(Math.floor(Math.random() * 3) + x + 36, y - 2, false);
+        }
+        if (Math.random() > 0.3) { // backfacing C
+            createChair(Math.floor(Math.random() * 5) + x + 7, y + 4, true);
+        }
+        if (Math.random() > 0.3) { // backfacing D
+            createChair(Math.floor(Math.random() * 5) + x + 39, y + 4, true);
+        }
+    }
+}
+
+function createFoliage(x, y) {
+    'use strict';
+    var o, t;
+    o = getObstacle();
+    t = obstacleTypes[2];
+    createObstacle(o, t);
+    // set frame
+    o.frame = 0;
+    o.reset(Math.floor(Math.random() * 2) + x, Math.floor(Math.random() * 3) + y - 1);
+}
+
+function createParaphernaliaA(x, y) {
+    'use strict';
+    var o, t, p;
+    o = getObstacle();
+    p = Math.floor(Math.random() * 6);
+    t = obstacleTypes[3 + p];
+    createObstacle(o, t);
+    // set frame
+    o.frame = p;
+    o.reset(Math.floor(Math.random() * 2) + x, Math.floor(Math.random() * 3) + y - 1);
+}
+
+// --------------------------------------------------------------------------------------
+function collideWaterBucket(p, q) {
+    'use strict';
+    if (p === player && q) {
+        q.frame = 1;
+        q.collideHandler = null;
+    }
+}
+
+// --------------------------------------------------------------------------------------
+function killObstacles() {
+    'use strict';
+    for (i = 0; i < obstacles.length; i += 1) {
+        if (obstacles[i].x < game.camera.x - obstacles[i].width) {
+            obstacles[i].kill();
         }
     }
 }

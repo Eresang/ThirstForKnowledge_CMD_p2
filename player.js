@@ -74,6 +74,7 @@ function checkPlayerInput() {
         if (playerShoot()) {
             player.animations.play('character_shoot', 10, false);
             pi_allowAnimation = false;
+            upgradeProjectile(selectedProjectile);
         }
     }
 }

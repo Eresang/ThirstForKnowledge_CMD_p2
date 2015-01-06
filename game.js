@@ -9,7 +9,7 @@ var runner = function (game) {
 runner.prototype = {
     create: function () {
         'use strict';
-        game.stage.backgroundColor = "#9d00ff";
+        game.stage.backgroundColor = "#dec56f";
         // starts the physics engine
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
@@ -21,9 +21,9 @@ runner.prototype = {
         game.time.advancedTiming = true;
         
         addEnemiesToArray();
-        spawnEnemy();
+        //spawnEnemy();
         
-        addObstaclesToArray();
+        initObstacles();
         //spawnObstacle();
         
         initLevel();
@@ -48,7 +48,7 @@ runner.prototype = {
     render: function () {
         'use strict';
         game.debug.body(player);
-        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        game.debug.text(maingroup.countLiving(), 2, 14);
     }
     
 };
