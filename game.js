@@ -27,7 +27,7 @@ runner.prototype = {
         spawnEnemy();
         
         addObstaclesToArray();
-        spawnObstacle();
+        //spawnObstacle();
     },
     
     update: function () {
@@ -35,6 +35,8 @@ runner.prototype = {
         checkPlayerInput();
         updateProjectiles();
         collisionHandler();
+        killObstacles();
+        worldGenerator();
     },
     
     init: function () {

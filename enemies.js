@@ -30,7 +30,7 @@ function spawnEnemy () {
             
             enemy.reset(ix, iy);
             game.physics.arcade.enable(enemy);
-            enemy.body.velocity.x = 200;
+            enemy.body.velocity.x = -speed;
             
         }
     }

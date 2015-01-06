@@ -1,29 +1,34 @@
-var amountOfObstacles = 30;
+var amountOfObstacles = 15;
 var obstacleArray = [];
 
 function addObstaclesToArray () {
     for (i = 0; i < amountOfObstacles; i++) {
-        obstacle = game.add.sprite(0, 0, "obstacle");
+        obstacle = maingroup.create(0, 0, "obstacle");
         game.physics.arcade.enable(obstacle);
-        obstacle.visible = false;
+        obstacle.exists = false;
         obstacle.body.immovable = true;
         obstacleArray.push(obstacle);
     }
 }
 
-function spawnObstacle () {
-    
-    ix = x;
-    iy = y;
-    
-    for (i = 0; i < amountOfObstacles; i++) {
-        
-        obstacle = obstacleArray[i];
-        if (obstacle !== null) {
-            ix += 100;
-            iy += 15;
+function spawnObstacle (x, y, i) {
             
-            obstacle.reset(ix, iy);
-        }        
+    obstacle = obstacleArray[i];
+    obstacle.reset(x, y);
+    console.log(obstacle.x);
+    obstacle.body.velocity.x = -speed;
+}
+
+function killObstacles () {
+    for (i = 0; i < obstacleArray.length; i++) {
+        if (obstacleArray[i].x < 0 - obstacleArray[i].width) {
+            obstacleArray[i].kill();
+        }
+    }
+    
+    for (i = 0; i < enemyArray.length; i++) {
+        if (enemyArray[i].x < 0 - enemyArray[i].width) {
+            enemyArray[i].kill();
+        }
     }
 }
