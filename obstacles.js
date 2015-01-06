@@ -1,13 +1,14 @@
-var amountOfObstacles = 15;
+var amountOfObstacles = 200;
 var obstacleArray = [];
 
 function addObstaclesToArray () {
     for (i = 0; i < amountOfObstacles; i++) {
-        obstacle = maingroup.create(0, 0, "obstacle");
+        obstacle = maingroup.create(0, 0);
         game.physics.arcade.enable(obstacle);
-        obstacle.exists = false;
         obstacle.body.immovable = true;
+        obstacle.anchor.setTo(0.0, 1.0);
         obstacleArray.push(obstacle);
+        obstacle.kill();
     }
 }
 
@@ -15,13 +16,12 @@ function spawnObstacle (x, y, i) {
             
     obstacle = obstacleArray[i];
     obstacle.reset(x, y);
-    console.log(obstacle.x);
-    obstacle.body.velocity.x = -speed;
+    obstacle.body.velocity.x = 0;
 }
 
 function killObstacles () {
     for (i = 0; i < obstacleArray.length; i++) {
-        if (obstacleArray[i].x < 0 - obstacleArray[i].width) {
+        if (obstacleArray[i].x < game.camera.x - obstacleArray[i].width) {
             obstacleArray[i].kill();
         }
     }

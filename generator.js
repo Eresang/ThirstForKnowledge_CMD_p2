@@ -1,54 +1,62 @@
 var isOdd = function (x) {
     'use strict';
-    return (x && 1);
+    return (x & 1);
 };
 var isEven = function (x) {
     'use strict';
-    return (x && 0);
+    return (x & 0);
 };
 
 var gn_lastCameraX = -gameWidth,
     gn_patternsPassed = 0,
-    gn_patternMax,
+    gn_patternMax = 31,
     gn_patternID = 0,
-    gn_patternWidth = [24, 24, 48, 72],
+    gn_patternWidth = [32, 70, 25, 72],
+    gn_patternPos = 0,
     gn_patterns = [
         { // start pattern
-            pattern: [0, 0, 0, 1],
-            patternPos: 0
+            pattern: [0, 0, 0, 1]
         },
         {
-            pattern: [1, 2, 2, 2],
-            patternPos: 0
+            pattern: [1, 2, 1, 2, 1, 2, 1]
         },
         {
-            pattern: [0, 2, 2, 2],
-            patternPos: 0
+            pattern: [0, 2, 1, 2, 1, 2, 1]
         },
         {
-            pattern: [1, 2, 2, 2, 2],
-            patternPos: 0
+            pattern: [1, 2, 1, 2, 1, 2, 0]
         },
         {
-            pattern: [0, 2, 2, 2, 2],
-            patternPos: 0
+            pattern: [0, 2, 1, 2, 1, 2, 0]
         },
         {
-            pattern: [1, 2, 2, 2, 2, 2],
-            patternPos: 0
+            pattern: [0, 2, 0, 2, 1, 2, 0]
         },
         {
-            pattern: [0, 2, 2, 2, 2, 2],
-            patternPos: 0
+            pattern: [0, 2, 1, 2, 0, 2, 1]
+        },
+        {
+            pattern: [0, 2, 0, 2, 1, 2, 1]
+        },
+        {
+            pattern: [1, 2, 1, 2, 0, 2, 1]
+        },
+        {
+            pattern: [1, 2, 1, 2, 0, 2, 0]
+        },
+        {
+            pattern: [1, 2, 0, 2, 1, 2, 1]
+        },
+        {
+            pattern: [1, 2, 0, 2, 0, 2, 1]
         },
         { // boss pattern
-            pattern: [0, 0, 0, 0, 3],
-            patternPos: 0
+            pattern: [0, 0, 0, 0, 3]
         }
     ];
 
-var gn_rowLength = 9,
-    gn_reserved = [],
+var gn_columnLength = 9,
+    gn_reserved = [false, false, false, false, false, false, false, false, false],
     gn_obstacleChance = 0.8,
     gn_obstacleSmallChance = 0.4,
     gn_enemyChance = 0.5,
@@ -56,9 +64,10 @@ var gn_rowLength = 9,
     gn_pickupChance = 0.2,
     gn_pickupPathChance = 0.15;
 
-var gn_bigHeight = 48,
-    gn_smallHeight = 24,
-    gn_spacing = 4;
+var gn_bigHeight = 32,
+    gn_smallHeight = 16,
+    gn_spacing = 4,
+    gn_columnspace = 8;
 
 var difficulty = 0,
     gn_difficulties = [
@@ -77,14 +86,24 @@ var difficulty = 0,
     ];
 
 //----------------------------------------------------------------
+var tC = 0;
 function genObstacle(x, y) {
     'use strict';
-    
+    spawnObstacle(x, y, tC);
+    obstacleArray[tC].loadTexture('obstacle');
+    obstacleArray[tC].body.setSize(70, 8);
+    tC += 1;
 }
 
-function genSmallObstacle(x, y) {
+function genSmallObstacle(x, y, inBetween) {
     'use strict';
-    
+    if (inBetween) {
+        spawnObstacle(x, y, tC);
+        obstacleArray[tC].loadTexture('smallobstacle');
+        obstacleArray[tC].body.setSize(16, 4);
+        console.log(obstacleArray[tC].width + ' ' + obstacleArray[tC].height);
+        tC += 1;
+    }
 }
 
 function genEnemy(x, y) {
@@ -102,39 +121,35 @@ function generateLevelRow(x) {
     'use strict';
     // loop counter, difficulty modifiers
     var i,
-        h = 32,
+        h = gameHeight - 128,
         glr_difficultyA = gn_difficulties[difficulty].modifierA,
         glr_difficultyB = gn_difficulties[difficulty].modifierB;
     
     // loop through all spawnpoints
-    for (i = 0; i < gn_rowLength; i += 1) {
-        
+    for (i = 0; i < gn_columnLength; i += 1) {
         // odd positions may contain certain objects that even positions don't
-        if (isOdd(i) && !gn_reserved[i]) {
+        if (isOdd(i)) {
             // odd positions may contain: tables, chairs , <large obstacles>, enemies, pickups
             if (Math.random() - glr_difficultyA < gn_obstacleChance) { // obstacle
-                genObstacle(x);
+                genObstacle(x, h);
             } else if (Math.random() - glr_difficultyB < gn_enemyChance) { // enemy
-                genEnemy(x);
+                genEnemy(x, h);
             } else if (Math.random() - glr_difficultyA < gn_pickupChance) { // pickup
-                genPickup(x);
+                genPickup(x, h);
             }
-            h += gn_bigHeight;
-        }
-        
-        // same goes for the reverse
-        if (isEven(i) && !gn_reserved[i]) {
+            h -= gn_bigHeight;
+        } else { // else, reverse
             // even positions may contain: enemies, pickups, bags, trashbins, <small obstacles>
             if (Math.random() - glr_difficultyA < gn_obstacleSmallChance) { // obstacle
-                genSmallObstacle(x);
+                genSmallObstacle(x, h, false);
             } else if (Math.random() - glr_difficultyB < gn_enemyPathChance) { // enemy
-                genEnemy(x);
+                genEnemy(x, h);
             } else if (Math.random() - glr_difficultyA < gn_pickupPathChance) { // pickup
-                genPickup(x);
+                genPickup(x, h);
             }
-            h += gn_smallHeight;
+            h -= gn_smallHeight;
         }
-        h += gn_spacing;
+        h -= gn_spacing;
     }
 }
 
@@ -142,37 +157,33 @@ function generateLevelRowNoBigObstacles(x) {
     'use strict';
     // loop counter, difficulty modifiers
     var i,
-        h = 32,
+        h = gameHeight - 128,
         glr_difficultyA = gn_difficulties[difficulty].modifierA,
         glr_difficultyB = gn_difficulties[difficulty].modifierB;
     
     // loop through all spawnpoints
-    for (i = 0; i < gn_rowLength; i += 1) {
-        
+    for (i = 0; i < gn_columnLength; i += 1) {
         // odd positions may contain certain objects that even positions don't
-        if (isOdd(i) && !gn_reserved[i]) {
+        if (isOdd(i)) {
             // odd positions may contain: tables, chairs , <large obstacles>, enemies, pickups
-            if (Math.random() - glr_difficultyB + gn_obstacleChance < gn_enemyChance) { // enemy
-                genEnemy(x);
-            } else if (Math.random() - glr_difficultyA < gn_pickupChance) { // pickup
-                genPickup(x);
-            }
-            h += gn_bigHeight;
-        }
-        
-        // same goes for the reverse
-        if (isEven(i) && !gn_reserved[i]) {
-            // even positions may contain: enemies, pickups, bags
             if (Math.random() - glr_difficultyA < gn_obstacleSmallChance) { // obstacle
-                genSmallObstacle(x);
-            } else if (Math.random() - glr_difficultyB < gn_enemyPathChance) { // enemy
-                genEnemy(x);
-            } else if (Math.random() - glr_difficultyA < gn_pickupPathChance) { // pickup
-                genPickup(x);
+                genSmallObstacle(x, h, true);
+            } else if (Math.random() - glr_difficultyB < gn_enemyChance) { // enemy
+                genEnemy(x, h);
+            } else if (Math.random() - glr_difficultyA < gn_pickupChance) { // pickup
+                genPickup(x, h);
             }
-            h += gn_smallHeight;
+            h -= gn_bigHeight;
+        } else { // else, reverse
+            // even positions may contain: enemies, pickups, bags
+            if (Math.random() - glr_difficultyB + gn_obstacleSmallChance < gn_enemyPathChance) { // enemy
+                genEnemy(x, h);
+            } else if (Math.random() - glr_difficultyA < gn_pickupPathChance) { // pickup
+                genPickup(x, h);
+            }
+            h -= gn_smallHeight;
         }
-        h += gn_spacing;
+        h -= gn_spacing;
     }
 }
 
@@ -180,22 +191,28 @@ function generateLevel() {
     'use strict';
     var p = gn_patterns[gn_patternID];
     // if camera x > last x since last time, generate new row
-    if (game.camera.x - gn_lastCameraX >= gn_patternWidth[p.pattern[p.patternPos]]) {
-        gn_lastCameraX += gn_patternWidth[p.pattern[p.patternPos]];
-        switch (p.pattern[p.patternPos]) {
+    if (game.camera.x >= gn_lastCameraX) {
+        gn_lastCameraX += gn_patternWidth[p.pattern[gn_patternPos]] + gn_columnspace;
+        console.log("genLevel " + (gn_lastCameraX + gameWidth));
+        switch (p.pattern[gn_patternPos]) {
         case 0: // start area, only background generation
             // todo
             break;
         case 1: // area with only small generation
-            generateLevelRowNoBigObstacles();
+            generateLevelRowNoBigObstacles(gn_lastCameraX + gameWidth);
             break;
         case 2: // area with both big and small generation
-            generateLevelRow();
+            generateLevelRow(gn_lastCameraX + gameWidth);
             break;
         case 3: // area with boss
                 
             break;
         default:
+        }
+        gn_patternPos += 1;
+        if (gn_patternPos >= p.pattern.length) {
+            gn_patternPos = 0;
+            gn_patternID = lowest(gn_patterns.length - 1, gn_patternID + 1);
         }
     }
 }

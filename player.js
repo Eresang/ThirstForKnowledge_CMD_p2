@@ -26,7 +26,7 @@ function initPlayer() {
     // add it to maingroup
     maingroup.add(player);
     
-    game.world.resize(gameWidth * 4, gameHeight * 4);
+    game.world.resize(gameWidth * 16, gameHeight);
     game.camera.follow(player);
     
     pi_allowAnimation = true;

@@ -19,10 +19,9 @@ loading.prototype = {
         this.load.spritesheet('projectilesheet', 'assets/projectilesheet.png', 48, 64);
         // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
         this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
-        this.load.image("obstacle", "assets/obstacle.png");
-
-// hey Elroy
-
+        this.load.image("obstacle", "assets/Tafel.png");
+        this.load.image("smallobstacle", "assets/Vreemde plant.png");
+        
     },
     create: function () {
         'use strict';

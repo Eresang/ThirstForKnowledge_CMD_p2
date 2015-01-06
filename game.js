@@ -25,6 +25,8 @@ runner.prototype = {
         
         addObstaclesToArray();
         //spawnObstacle();
+        
+        initLevel();
     },
     
     update: function () {
@@ -32,10 +34,9 @@ runner.prototype = {
         checkPlayerInput();
         updateProjectiles();
         collisionHandler();
+        generateLevel();
         killObstacles();
-        worldGenerator();
         
-        // sort as last
         maingroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },
     

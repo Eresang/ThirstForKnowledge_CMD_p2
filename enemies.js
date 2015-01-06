@@ -3,9 +3,10 @@ var enemyArray = [];
 
 function addEnemiesToArray () {
     for (i = 0; i < amountOfEnemies; i++) {
-        enemy = game.add.sprite(0, 0, "enemy");
+        enemy = game.add.sprite(0, 0, 'enemy');
         game.physics.arcade.enable(enemy);
         enemy.body.velocity.x = 200;
+        enemy.anchor.setTo(0.5, 1.0);
         enemy.visible = true;
         enemyArray.push(enemy);
         enemy.newhealth = 25;
