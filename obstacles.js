@@ -37,7 +37,8 @@ var obstacleTypes = [
             bodyXOffset: 0,
             bodyYOffset: 0,
             bodyEnable: true,
-            collision: collideWaterBucket
+            collision: collideWaterBucket,
+            respin: 0.2
         },
         {   // empty bucket with spill
             sheet: 'paraphernaliaA',
@@ -46,7 +47,8 @@ var obstacleTypes = [
             bodyXOffset: 0,
             bodyYOffset: 0,
             bodyEnable: true,
-            collision: null
+            collision: null,
+            respin: 0.2
         },
         {   // empty bucket
             sheet: 'paraphernaliaA',
@@ -55,7 +57,8 @@ var obstacleTypes = [
             bodyXOffset: 0,
             bodyYOffset: 0,
             bodyEnable: true,
-            collision: null
+            collision: null,
+            respin: 0.2
         },
         {   // waterspill
             sheet: 'paraphernaliaA',
@@ -64,7 +67,8 @@ var obstacleTypes = [
             bodyXOffset: 0,
             bodyYOffset: 0,
             bodyEnable: false,
-            collision: null
+            collision: null,
+            respin: 0.2
         },
         {   // trashbin
             sheet: 'paraphernaliaA',
@@ -73,7 +77,8 @@ var obstacleTypes = [
             bodyXOffset: 7,
             bodyYOffset: 2,
             bodyEnable: true,
-            collision: null
+            collision: null,
+            respin: 0.3
         },
         {   // globe
             sheet: 'paraphernaliaA',
@@ -82,7 +87,8 @@ var obstacleTypes = [
             bodyXOffset: 4,
             bodyYOffset: 2,
             bodyEnable: true,
-            collision: null
+            collision: null,
+            respin: 0.7
         }
     ];
 
@@ -186,6 +192,9 @@ function createParaphernaliaA(x, y) {
     var o, t, p;
     o = getObstacle();
     p = Math.floor(Math.random() * 6);
+    while (Math.random() < obstacleTypes[3 + p].respin) {
+        p = Math.floor(Math.random() * 6);
+    }
     t = obstacleTypes[3 + p];
     createObstacle(o, t);
     // set frame

@@ -1,4 +1,4 @@
-var playerMoveSpeed = 200,
+var playerMoveSpeed = 180,
     pi_allowAnimation;
 
 var kc_leftKey;
@@ -6,7 +6,7 @@ var kc_leftKey;
 function initPlayer() {
     'use strict';
     // create player and physics body, set hitbox and anchor for collision
-    player = new Phaser.Sprite(game, 20, (gameHeight + 64) / 2, 'charactersheet', 0);
+    player = new Phaser.Sprite(game, gameWidth / 4, (gameHeight + 64) / 2, 'charactersheet', 0);
     game.physics.arcade.enable(player);
     player.body.collideWorldBounds = true;
     player.body.setSize(32, 4, 0, 0); // edit values for new sprites?
@@ -26,8 +26,9 @@ function initPlayer() {
     // add it to maingroup
     maingroup.add(player);
     
-    game.world.resize(gameWidth * 16, gameHeight);
+    game.world.resize(gameWidth * 32, gameHeight);
     game.camera.follow(player);
+    game.camera.deadzone = new Phaser.Rectangle(100, 0, 100, gameHeight);
     
     pi_allowAnimation = true;
     
@@ -97,19 +98,19 @@ function animatePlayer(movement, angle) {
 function setPlayerAnimations(movement, angle) {
     switch (angle) {
     case 180:
-        player.animations.play('character_move_up', 10, true);
+        player.animations.play('character_move_up', 4, true);
         break;
     case 135:
-        player.animations.play('character_move_up_right', 10, true);
+        player.animations.play('character_move_up_right', 4, true);
         break;
     case 90:
-        player.animations.play('character_move_right', 10, true);
+        player.animations.play('character_move_right', 4, true);
         break;
     case 45:
-        player.animations.play('character_move_down_right', 10, true);
+        player.animations.play('character_move_down_right', 4, true);
         break;
     case 0:
-        player.animations.play('character_move_down', 10, true);
+        player.animations.play('character_move_down', 4, true);
         break;
     }
     // change animation if there is no motion

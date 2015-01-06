@@ -14,37 +14,37 @@ var gn_lastCameraX = -gameWidth,
     gn_patternPos = 0,
     gn_patterns = [
         { // start pattern
-            pattern: [0, 0, 0, 1]
+            pattern: [0, 0, 0, 0, 0, 0, 1]
         },
         {
-            pattern: [1, 2, 1, 2, 1, 2, 1]
+            pattern: [1, 2, 1, 2, 1, 2, 1, 2, 1]
         },
         {
-            pattern: [0, 2, 1, 2, 1, 2, 1]
+            pattern: [0, 2, 1, 2, 2, 1, 2, 1]
         },
         {
-            pattern: [1, 2, 1, 2, 1, 2, 0]
+            pattern: [1, 2, 1, 2, 0, 2, 1, 2, 1]
         },
         {
-            pattern: [0, 2, 1, 2, 1, 2, 0]
-        },
-        {
-            pattern: [0, 2, 0, 2, 1, 2, 0]
-        },
-        {
-            pattern: [0, 2, 1, 2, 0, 2, 1]
+            pattern: [0, 2, 1, 2, 2, 1, 2, 1]
         },
         {
             pattern: [0, 2, 0, 2, 1, 2, 1]
         },
         {
+            pattern: [0, 2, 1, 2, 0, 2, 1]
+        },
+        {
+            pattern: [0, 2, 0, 2, 1, 2, 2, 1]
+        },
+        {
+            pattern: [1, 2, 2, 1, 2, 1, 0, 2, 1]
+        },
+        {
             pattern: [1, 2, 1, 2, 0, 2, 1]
         },
         {
-            pattern: [1, 2, 1, 2, 0, 2, 0]
-        },
-        {
-            pattern: [1, 2, 0, 2, 1, 2, 1]
+            pattern: [1, 2, 2, 0, 2, 1, 2, 1]
         },
         {
             pattern: [1, 2, 0, 2, 0, 2, 1]
@@ -114,6 +114,10 @@ function generateLevelColumnNoBigObstacles(x) {
     
     // first fill in foliage
     l = Math.floor(Math.random() * maxFoliageInColumn);
+    // some fancy chance reduction
+    if (l > 2 && Math.random() > 0.3) {
+        l -= 1;
+    }
     for (i = 0; i < l; i += 1) {
         p = Math.floor(Math.random() * foliageMask.length);
         if (!foliageMask[p - 1] && !foliageMask[p + 1]) {
@@ -125,7 +129,7 @@ function generateLevelColumnNoBigObstacles(x) {
     for (i = 0; i < gn_columnLength; i += 1) {
         // check if there isn't already foliage
         if (!foliageMask[i]) {
-            if ((i === 0 || i === gn_columnLength - 1) && Math.random() * 2.5 < gn_obstacleSmallChance) {
+            if ((i === 0 || i === gn_columnLength - 1) && Math.random() < gn_obstacleSmallChance) {
                 createParaphernaliaA(x, h);
             } else if (Math.random() < gn_enemyChance && numEnemies < maxEnemies && e_count < maxEnemiesInColumn) { // enemy
                 genEnemy(x, h);
@@ -153,7 +157,6 @@ function generateLevel() {
     var p = gn_patterns[gn_patternID];
     // if camera x > last x since last time, generate new row
     if (game.camera.x >= gn_lastCameraX) {
-        console.log("genLevel " + (gn_lastCameraX + gameWidth));
         switch (p.pattern[gn_patternPos]) {
         case 0: // start area, only background generation
             // todo
@@ -171,9 +174,16 @@ function generateLevel() {
         }
         gn_lastCameraX += gn_patternWidth[p.pattern[gn_patternPos]] + gn_columnspace;
         gn_patternPos += 1;
+        
+        // switch to the next pattern?
         if (gn_patternPos >= p.pattern.length) {
             gn_patternPos = 0;
-            gn_patternID = lowest(gn_patterns.length - 1, gn_patternID + 1);
+            gn_patternsPassed += 1;
+            if (gn_patternsPassed >= gn_patternMax) {
+                gn_patternID = gn_patterns.length - 1;
+            } else {
+                gn_patternID = Math.floor(Math.random() * (gn_patterns.length - 2)) + 1; 
+            }
         }
     }
 }
