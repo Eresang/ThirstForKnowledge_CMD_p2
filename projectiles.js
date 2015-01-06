@@ -1,50 +1,56 @@
-// functions and variables for every type of projectile put in arrays for easy calling
-var projectileTypeCount = 3,
-    projectileFireRates = [15, 30, 20, 15, 20, 30, 25, 10],
-    createProjectileHandlers = [createProjectile1, createProjectile2, createProjectile3, createProjectile4, createProjectile5, createProjectile6];
+var lowest = function (a, b) {
+    'use strict';
+    if (a < b) {
+        return (a);
+    } else {
+        return (b);
+    }
+};
+
+// functions and variables for every type of projectile put in array for easy retrieval
+var projectileTypes = [
+        {   // geo weapon
+            source: {},
+            firerate: 15,
+            speed: 800,
+            frame: 0,
+            animation: 'ani_geo_ammo',
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile1
+        },
+        {   // catapult weapon
+            source: {},
+            firerate: 30,
+            speed: 500,
+            frame: 1,
+            animation: 'ani_cata_ammo',
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile2
+        },
+        {   // peashooter weapon
+            source: {},
+            firerate: 20,
+            speed: 300,
+            frame: 2,
+            animation: 'ani_pea_ammo',
+            upgrade: 0,
+            upgradeMax: 2,
+            damages: [1, 2, 3],
+            collision: collisionProjectile3
+        }
+    ];
 
 // other variables
 var selectedProjectile = 0,
     maxProjectileCount = 50,
     projectileDelay = 0,
-    fireRate = projectileFireRates[selectedProjectile];
+    fireRate = projectileTypes[selectedProjectile].firerate;
 
 var projectiles = [];
-
-function updateProjectiles() {
-    'use strict';
-    projectileDelay += 1;
-}
-
-// --------------------------------------------------------------------------------------
-// player projectile function(s)
-function changeProjectileSelected(newProjectileSelected) {
-    'use strict';
-    if (selectedProjectile !== newProjectileSelected) {
-        // modular projectile selection
-        selectedProjectile = newProjectileSelected % projectileTypeCount;
-        if (selectedProjectile < 0) {
-            selectedProjectile = projectileTypeCount + selectedProjectile;
-        }
-        fireRate = projectileFireRates[selectedProjectile];
-        // timer?
-    }
-}
-
-function swapProjectile() {
-    'use strict';
-    changeProjectileSelected(selectedProjectile + 1);
-}
-
-function playerShoot() {
-    'use strict';
-    if (projectileDelay >= fireRate) {
-        createProjectileHandlers[selectedProjectile]();
-        projectileDelay = 0;
-        return true;
-    }
-    return false;
-}
 
 //----------------------------------------------------------------
 // basic projectiles
@@ -63,6 +69,11 @@ function initProjectiles() {
     }
 }
 
+function upgradeProjectile(projectileID) {
+    'use strict';
+    projectileTypes[projectileID].upgrade = lowest(projectileTypes[projectileID].upgrade + 1, projectileTypes[projectileID].upgradeMax);
+}
+
 function getProjectile() {
     'use strict';
     var i,
@@ -77,91 +88,88 @@ function getProjectile() {
     return p;
 }
 
-//----------------------------------------------------------------
-// projectile type 1
-function createProjectile1() {
+function updateProjectiles() {
+    'use strict';
+    projectileDelay += 1;
+}
+
+// --------------------------------------------------------------------------------------
+// player projectile function(s)
+function changeProjectileSelected(newProjectileSelected) {
+    'use strict';
+    if (selectedProjectile !== newProjectileSelected) {
+        // modular projectile selection
+        selectedProjectile = newProjectileSelected % projectileTypes.length;
+        if (selectedProjectile < 0) {
+            selectedProjectile = projectileTypes.length + selectedProjectile;
+        }
+        fireRate = projectileTypes[selectedProjectile].firerate;
+        // timer?
+    }
+}
+
+function swapProjectile() {
+    'use strict';
+    changeProjectileSelected(selectedProjectile + 1);
+}
+
+function createProjectile(shooter) {
     'use strict';
     var p;
     p = getProjectile();
     if (p) {
         p.angle = 0;
         p.body.angle = 0;
-        p.collideHandler = collisionProjectile1;
-        p.frame = 0;
-        p.reset(player.body.x, player.body.y);
-        p.body.velocity.x = 800;
+        p.source = shooter;
+        p.collideHandler = projectileTypes[selectedProjectile].collision;
+        p.frame = projectileTypes[selectedProjectile].frame;
+        p.reset(shooter.body.x, shooter.body.y);
+        p.body.velocity.x = projectileTypes[selectedProjectile].speed;
     }
 }
 
+function playerShoot() {
+    'use strict';
+    if (projectileDelay >= fireRate) {
+        createProjectile(player);
+        projectileDelay = 0;
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------
+// projectile type 1
 function collisionProjectile1(p, q) {
     'use strict';
 }
 
 //----------------------------------------------------------------
 // projectile type 2
-function createProjectile2() {
-    'use strict';
-    var p;
-    p = getProjectile();
-    if (p) {
-        p.collideHandler = collisionProjectile2;
-        p.frame = 1;
-        p.reset(player.body.x, player.body.y);
-        p.body.velocity.x = 500;
-    }
-}
-
 function collisionProjectile2(p, q) {
     'use strict';
 }
 
 //----------------------------------------------------------------
 // projectile type 3
-function createProjectile3() {
-    'use strict';
-    var p;
-    p = getProjectile();
-    if (p) {
-        p.collideHandler = collisionProjectile3;
-        p.frame = 2;
-        p.reset(player.body.x, player.body.y);
-        p.body.velocity.x = 500;
-    }
-}
-
 function collisionProjectile3(p, q) {
     'use strict';
 }
 
 //----------------------------------------------------------------
 // projectile type 4
-function createProjectile4() {
-    'use strict';
-    //child.collideHandler = collisionProjectile1;
-}
-
 function collisionProjectile4(p, q) {
     'use strict';
 }
 
 //----------------------------------------------------------------
 // projectile type 5
-function createProjectile5() {
-    'use strict';
-    //child.collideHandler = collisionProjectile1;
-}
-
 function collisionProjectile5(p, q) {
     'use strict';
 }
 
 //----------------------------------------------------------------
 // projectile type 6
-function createProjectile6() {
-    'use strict';
-    //child.collideHandler = collisionProjectile1;
-}
-
 function collisionProjectile6(p, q) {
     'use strict';
 }

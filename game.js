@@ -32,6 +32,9 @@ runner.prototype = {
         checkPlayerInput();
         updateProjectiles();
         collisionHandler();
+        
+        // sort as last
+        maingroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },
     
     init: function () {
@@ -41,6 +44,7 @@ runner.prototype = {
     
     render: function () {
         'use strict';
+        game.debug.body(player);
         game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
     }
     
