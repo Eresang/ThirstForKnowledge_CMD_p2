@@ -33,7 +33,6 @@ function initPlayer() {
     pi_allowAnimation = true;
     
     kc_leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-    kc_leftKey.onDown.add(swapProjectile, this);
 }
 
 // --------------------------------------------------------------------------------------
@@ -75,7 +74,6 @@ function checkPlayerInput() {
         if (playerShoot()) {
             player.animations.play('character_shoot', 10, false);
             pi_allowAnimation = false;
-            upgradeProjectile(selectedProjectile);
         }
     }
 }

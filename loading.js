@@ -17,6 +17,7 @@ loading.prototype = {
         // insert the loading of all assets after this line, :
         this.load.spritesheet('charactersheet', 'assets/charactersheet.png', 64, 64);
         this.load.spritesheet('ammosheet', 'assets/Ammo.png', 23, 17);
+        this.load.spritesheet('pickupsheet', 'assets/Pickups_A.png', 18, 18);
         this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
         
         this.load.spritesheet("tables", "assets/Tables.png", 70, 43);

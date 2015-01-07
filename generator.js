@@ -3,8 +3,7 @@ var numEnemies = 0,
     maxEnemiesInColumn = 1;
 
 var numPickups = 0,
-    maxPickups = 8,
-    maxPickupsInColumn = 1;
+    maxPickups = 8;
 
 var gn_lastCameraX = -gameWidth,
     gn_patternsPassed = 0,
@@ -57,7 +56,7 @@ var gn_lastCameraX = -gameWidth,
 var gn_columnLength = 9,
     gn_reserved = [false, false, false, false, false, false, false, false, false],
     gn_obstacleChance = 0.8,
-    gn_obstacleSmallChance = 0.4,
+    gn_obstacleSmallChance = 0.2,
     gn_enemyChance = 0.5,
     gn_enemyPathChance = 0.3,
     gn_pickupChance = 0.2,
@@ -80,10 +79,14 @@ function genPickup(x, y) {
 }
 
 //----------------------------------------------------------------
+var gn_pickupSkip = 0,
+    gn_pickupInterval = 8;
+
 function generateLevelColumn(x) {
     'use strict';
     // loop counter, difficulty modifiers
     var i,
+        e_count = 0,
         h = gameHeight - 128 - gn_smallHeight;
     
     // loop through all table spawnpoints
@@ -91,14 +94,17 @@ function generateLevelColumn(x) {
         // table priority
         if (Math.random() < gn_obstacleChance) { // obstacle
             createTable(x, h, true);
-        } else if (Math.random() < gn_enemyChance && numEnemies < maxEnemies) { // enemy
+        } else if (Math.random() < gn_enemyChance && numEnemies < maxEnemies && e_count < maxEnemiesInColumn) { // enemy
             genEnemy(x, h);
-            numEnemies += 1;
-        } else if (Math.random() < gn_pickupChance && numPickups < maxPickups) { // pickup
-            genPickup(x, h);
-            numPickups += 1;
+            e_count += 1;
+        } else if (gn_pickupSkip < 1 && Math.random() < gn_pickupChance && numPickups < maxPickups) { // pickup
+            createRandomWeaponPickup(x, h);
+            gn_pickupSkip = gn_pickupInterval;
         }
         h -= gn_bigHeight + gn_smallHeight;
+    }
+    if (gn_pickupSkip > 0) {
+        gn_pickupSkip -= 1;
     }
 }
 
@@ -107,7 +113,6 @@ function generateLevelColumnNoBigObstacles(x) {
     // loop counter, difficulty modifiers
     var i, l, p,
         e_count = 0,
-        p_count = 0,
         maxFoliageInColumn = 4,
         foliageMask = [false, false, false, false, false, false, false, false, false],
         h = gameHeight - 128;
@@ -134,11 +139,9 @@ function generateLevelColumnNoBigObstacles(x) {
             } else if (Math.random() < gn_enemyChance && numEnemies < maxEnemies && e_count < maxEnemiesInColumn) { // enemy
                 genEnemy(x, h);
                 e_count += 1;
-                numEnemies += 1;
-            } else if (Math.random() < gn_pickupChance && numPickups < maxPickups && p_count < maxPickupsInColumn) { // pickup
-                genPickup(x, h);
-                p_count += 1;
-                numPickups += 1;
+            } else if (gn_pickupSkip < 1 && Math.random() < gn_pickupChance && numPickups < maxPickups) { // pickup
+                createRandomPickup(x, h);
+                gn_pickupSkip = gn_pickupInterval;
             }
         } else {
             createFoliage(x, h);
@@ -148,6 +151,9 @@ function generateLevelColumnNoBigObstacles(x) {
             h -= gn_bigHeight;
         } else {
             h -= gn_smallHeight;
+        }
+        if (gn_pickupSkip > 0) {
+            gn_pickupSkip -= 1;
         }
     }
 }
@@ -182,7 +188,7 @@ function generateLevel() {
             if (gn_patternsPassed >= gn_patternMax) {
                 gn_patternID = gn_patterns.length - 1;
             } else {
-                gn_patternID = Math.floor(Math.random() * (gn_patterns.length - 2)) + 1; 
+                gn_patternID = Math.floor(Math.random() * (gn_patterns.length - 2)) + 1;
             }
         }
     }

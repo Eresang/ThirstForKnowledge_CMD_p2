@@ -1,5 +1,5 @@
-var maxObstacleCount = 200;
-var obstacles = [];
+var maxObstacleCount = 200,
+    obstacles = [];
 
 // functions and variables for every type of projectile put in array for easy retrieval
 var obstacleTypes = [
@@ -96,14 +96,13 @@ var obstacleTypes = [
 function initObstacles() {
     'use strict';
     var i;
+    
     obstacles.length = maxObstacleCount;
     for (i = 0; i < maxObstacleCount; i += 1) {
         obstacles[i] = maingroup.create(0, 0);
         game.physics.arcade.enable(obstacles[i]);
         obstacles[i].anchor.setTo(0.0, 1.0);
         obstacles[i].body.immovable = true;
-        obstacles[i].checkWorldBounds = true;
-        obstacles[i].outOfBoundsKill = true;
         obstacles[i].kill();
     }
 }
@@ -132,14 +131,18 @@ function createObstacle(o, t) {
         o.body.enable = t.bodyEnable;
         o.loadTexture(t.sheet);
         o.collideHandler = t.collision;
-    }    
+    }
 }
 
 function createChair(x, y, backFacing) {
     'use strict';
     var o, t;
     o = getObstacle();
+    if (!(o)) {
+        return;
+    }
     t = obstacleTypes[1];
+    
     createObstacle(o, t);
     // set frame
     if (backFacing) {
@@ -154,7 +157,11 @@ function createTable(x, y, withChairs) {
     'use strict';
     var o, t;
     o = getObstacle();
+    if (!(o)) {
+        return;
+    }
     t = obstacleTypes[0];
+    
     createObstacle(o, t);
     // set frame, in such a way the table without stuff on it is most prevalent
     o.frame = highest(0, Math.floor(Math.random() * 14) - 4);
@@ -180,9 +187,13 @@ function createFoliage(x, y) {
     'use strict';
     var o, t;
     o = getObstacle();
+    if (!(o)) {
+        return;
+    }
     t = obstacleTypes[2];
-    createObstacle(o, t);
+    
     // set frame
+    createObstacle(o, t);
     o.frame = 0;
     o.reset(Math.floor(Math.random() * 2) + x, Math.floor(Math.random() * 3) + y - 1);
 }
@@ -196,8 +207,8 @@ function createParaphernaliaA(x, y) {
         p = Math.floor(Math.random() * 6);
     }
     t = obstacleTypes[3 + p];
+    
     createObstacle(o, t);
-    // set frame
     o.frame = p;
     o.reset(Math.floor(Math.random() * 2) + x, Math.floor(Math.random() * 3) + y - 1);
 }
@@ -205,7 +216,7 @@ function createParaphernaliaA(x, y) {
 // --------------------------------------------------------------------------------------
 function collideWaterBucket(p, q) {
     'use strict';
-    if (p === player && q) {
+    if (p === player && (q)) {
         q.frame = 1;
         q.collideHandler = null;
     }
@@ -214,8 +225,10 @@ function collideWaterBucket(p, q) {
 // --------------------------------------------------------------------------------------
 function killObstacles() {
     'use strict';
+    var i;
+    
     for (i = 0; i < obstacles.length; i += 1) {
-        if (obstacles[i].x < game.camera.x - obstacles[i].width) {
+        if (obstacles[i].x < game.camera.x - obstacles[i].width && obstacles[i].alive) {
             obstacles[i].kill();
         }
     }

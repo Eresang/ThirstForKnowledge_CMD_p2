@@ -24,6 +24,7 @@ runner.prototype = {
         //spawnEnemy();
         
         initObstacles();
+        initPickups();
         //spawnObstacle();
         
         initLevel();
@@ -35,7 +36,10 @@ runner.prototype = {
         updateProjectiles();
         collisionHandler();
         generateLevel();
+        
         killObstacles();
+        killPickups();
+        killProjectiles();
         
         maingroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },

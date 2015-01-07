@@ -39,8 +39,10 @@ function spawnEnemy () {
 
 function killEnemies() {
     'use strict';
+    var i;
+    
     for (i = 0; i < obstacles.length; i += 1) {
-        if (obstacles[i].x < game.camera.x - obstacles[i].width) {
+        if (obstacles[i].x < game.camera.x - obstacles[i].width && obstacles[i].alive) {
             obstacles[i].kill();
         }
     }
