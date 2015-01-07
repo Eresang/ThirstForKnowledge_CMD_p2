@@ -3,7 +3,7 @@ var obstacleArray = [];
 
 function addObstaclesToArray () {
     for (i = 0; i < amountOfObstacles; i++) {
-        obstacle = maingroup.create(0, 0, "obstacle");
+        obstacle = maingroup.create(0, 0, "table");
         game.physics.arcade.enable(obstacle);
         obstacle.exists = false;
         obstacle.body.immovable = true;
@@ -15,7 +15,6 @@ function spawnObstacle (x, y, i) {
             
     obstacle = obstacleArray[i];
     obstacle.reset(x, y);
-    console.log(obstacle.x);
     obstacle.body.velocity.x = -speed;
 }
 

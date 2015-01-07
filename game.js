@@ -24,7 +24,7 @@ runner.prototype = {
         maingroup = game.add.group();        
         
         addEnemiesToArray();
-        spawnEnemy();
+        //spawnEnemy();
         
         addObstaclesToArray();
         //spawnObstacle();
@@ -34,9 +34,11 @@ runner.prototype = {
         'use strict';
         checkPlayerInput();
         updateProjectiles();
-        collisionHandler();
+        
         killObstacles();
         worldGenerator();
+        collisionHandler();
+        enemyAI();
     },
     
     init: function () {

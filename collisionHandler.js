@@ -14,5 +14,4 @@ function collisionHandler () {
 function killEnemy (projectile, enemy) {
     projectile.kill();
     enemy.kill();
-    console.log(enemyArray.length);
 }
