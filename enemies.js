@@ -4,6 +4,7 @@ var bulletArray = [];
 
 function addEnemiesToArray () {
     for (i = 0; i < amountOfEnemies; i++) {
+        
         enemy = game.add.sprite(0, 0, 'canteenLady');
         game.physics.arcade.enable(enemy);
         enemy.body.velocity.x = 200;
@@ -56,7 +57,16 @@ function enemyShoot (i) {
     if (game.time.now > bulletTime) {
         
         bulletTime = game.time.now + enemyFireRate;
-        
-        
+    }
+}
+
+function killEnemies() {
+    'use strict';
+    var i;
+    
+    for (i = 0; i < obstacles.length; i += 1) {
+        if (obstacles[i].x < game.camera.x - obstacles[i].width && obstacles[i].alive) {
+            obstacles[i].kill();
+        }
     }
 }
