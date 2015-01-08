@@ -138,6 +138,12 @@ function collisionProjectile3(p, q) {
 function createProjectile4() {
     'use strict';
     //child.collideHandler = collisionProjectile1;
+    var p;
+    p = getProjectile();
+    if (p) {
+        p.collideHandler = collisionProjectile4;
+        p.frame = 3;
+    }
 }
 
 function collisionProjectile4(p, q) {
