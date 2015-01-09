@@ -80,7 +80,7 @@ function genPickup(x, y) {
 
 //----------------------------------------------------------------
 var gn_pickupSkip = 0,
-    gn_pickupInterval = 8;
+    gn_pickupInterval = 2;
 
 function generateLevelColumn(x) {
     'use strict';
@@ -152,9 +152,9 @@ function generateLevelColumnNoBigObstacles(x) {
         } else {
             h -= gn_smallHeight;
         }
-        if (gn_pickupSkip > 0) {
-            gn_pickupSkip -= 1;
-        }
+    }
+    if (gn_pickupSkip > 0) {
+        gn_pickupSkip -= 1;
     }
 }
 

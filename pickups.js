@@ -68,9 +68,9 @@ var pickupTypes = [
 var maxPickupCount = 20,
     pickups = [];
 
-var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", stroke: "#000000", strokeThickness: 3, align: "left" },
-    pu_textstyle2 = { font: "bold 14pt Calibri", fill: "#ccccff", stroke: "#000000", strokeThickness: 3, align: "left" },
-    pu_textstyle3 = { font: "bold 14pt Calibri", fill: "#bbffbb", stroke: "#000000", strokeThickness: 3, align: "left" };
+var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
+    pu_textstyle2 = { font: "bold 14pt Calibri", fill: "#bbddff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
+    pu_textstyle3 = { font: "bold 14pt Calibri", fill: "#bbffbb", stroke: "#000000", strokeThickness: 3.5, align: "left" };
 
 // --------------------------------------------------------------------------------------
 function initPickups() {
@@ -107,7 +107,7 @@ function pickupTextComplete(p, q) {
     p.destroy(true);
 }
 
-function pickupText(x, y, text, style) {
+function pickupText(x, y, text, style, up) {
     'use strict';
     var t, d;
     d = game.add.text(0, 0, text, style);
@@ -117,7 +117,11 @@ function pickupText(x, y, text, style) {
     t = game.add.tween(d);
     t.onComplete = new Phaser.Signal();
     t.onComplete.add(pickupTextComplete);
-    t.to({ alpha: 0, y: d.y + 16 }, 200, Phaser.Easing.Linear.None, false, 500).start();
+    if (up) {
+        t.to({ alpha: 0, y: d.y - 48 }, 200, Phaser.Easing.Linear.None, false, 250).start();
+    } else {
+        t.to({ alpha: 0, y: d.y + 16 }, 200, Phaser.Easing.Linear.None, false, 500).start();
+    }
 }
 
 // --------------------------------------------------------------------------------------
@@ -174,7 +178,7 @@ function createRandomPickup(x, y) {
 function collisionBookpickup(p, q) {
     'use strict';
     if (p === player && (q)) {
-        pickupText(q.x, q.y, '+wisdom', pu_textstyle2);
+        pickupText(q.x, q.y, '+wisdom', pu_textstyle2, true);
         q.kill();
         numPickups -= 1;
     }
@@ -184,7 +188,7 @@ function collisionWeaponpickup(p, q) {
     'use strict';
     if (p === player && (q)) {
         changeProjectileSelected(q.weapon);
-        pickupText(q.x, q.y, q.name, pu_textstyle1);
+        pickupText(q.x, q.y, q.name, pu_textstyle1, false);
         q.kill();
         numPickups -= 1;
     }
@@ -194,7 +198,7 @@ function collisionHealthpickup(p, q) {
     'use strict';
     if (p === player && (q)) {
         q.kill();
-        pickupText(q.x, q.y, '+++', pu_textstyle3);
+        pickupText(q.x, q.y, '+health', pu_textstyle3, true);
         numPickups -= 1;
     }
 }

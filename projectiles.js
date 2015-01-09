@@ -97,7 +97,7 @@ function initProjectiles() {
     'use strict';
     var i;
     
-    pj_text = game.add.text(0, 24, projectileTypes[selectedProjectile].name, pj_textstyle);
+    pj_text = game.add.text(4, 20, projectileTypes[selectedProjectile].name, pj_textstyle);
     pj_text.fixedToCamera = true;
     
     projectiles.length = maxProjectileCount;
@@ -164,7 +164,11 @@ function createProjectile(shooter) {
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
         p.reset(shooter.body.x, shooter.body.y);
-        p.body.velocity.x = t.speed;
+        if (p !=== player) {
+            p.body.velocity.x = -t.speed;
+        ) else {
+            p.body.velocity.x = t.speed;
+        }
     }
 }
 
