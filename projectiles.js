@@ -164,7 +164,7 @@ function createProjectile(shooter) {
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
         p.reset(shooter.body.x, shooter.body.y);
-        if (ahooter !== player) {
+        if (shooter !== player) {
             p.body.velocity.x = -t.speed;
         } else {
             p.body.velocity.x = t.speed;
