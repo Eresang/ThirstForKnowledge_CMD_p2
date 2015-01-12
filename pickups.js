@@ -68,7 +68,7 @@ var pickupTypes = [
 var maxPickupCount = 20,
     pickups = [];
 
-var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
+var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", background: "#ffffff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
     pu_textstyle2 = { font: "bold 14pt Calibri", fill: "#bbddff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
     pu_textstyle3 = { font: "bold 14pt Calibri", fill: "#bbffbb", stroke: "#000000", strokeThickness: 3.5, align: "left" };
 

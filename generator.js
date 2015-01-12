@@ -16,40 +16,40 @@ var gn_lastCameraX = -gameWidth,
             pattern: [0, 0, 0, 0, 0, 0, 1]
         },
         {
-            pattern: [1, 2, 1, 2, 1, 2, 1, 2, 1]
+            pattern: [1, 2, 2, 1, 1, 2, 2, 1, 0]
         },
         {
-            pattern: [0, 2, 1, 2, 2, 1, 2, 1]
+            pattern: [0, 2, 2, 1, 1, 2, 2, 1]
         },
         {
-            pattern: [1, 2, 1, 2, 0, 2, 1, 2, 1]
+            pattern: [2, 2, 0, 2, 2, 0, 1, 2, 1]
         },
         {
-            pattern: [0, 2, 1, 2, 2, 1, 2, 1]
+            pattern: [2, 2, 1, 2, 2, 1, 2, 0]
         },
         {
-            pattern: [0, 2, 0, 2, 1, 2, 1]
+            pattern: [0, 2, 2, 0, 1, 2, 2]
         },
         {
-            pattern: [0, 2, 1, 2, 0, 2, 1]
+            pattern: [1, 2, 0, 1, 2, 2, 1]
         },
         {
-            pattern: [0, 2, 0, 2, 1, 2, 2, 1]
+            pattern: [2, 2, 0, 2, 1, 2, 2, 1]
         },
         {
-            pattern: [1, 2, 2, 1, 2, 1, 0, 2, 1]
+            pattern: [2, 2, 0, 1, 2, 2, 1, 0, 2]
         },
         {
-            pattern: [1, 2, 1, 2, 0, 2, 1]
+            pattern: [2, 2, 0, 2, 2, 0, 2]
         },
         {
-            pattern: [1, 2, 2, 0, 2, 1, 2, 1]
+            pattern: [1, 2, 2, 0, 2, 0, 2, 1]
         },
         {
             pattern: [1, 2, 0, 2, 0, 2, 1]
         },
         { // boss pattern
-            pattern: [0, 0, 0, 0, 3]
+            pattern: [0, 0, 0, 0, 0, 0, 3]
         }
     ];
 
@@ -66,6 +66,8 @@ var gn_bigHeight = 32,
     gn_smallHeight = 16,
     gn_spacing = 4,
     gn_columnspace = 8;
+
+var gn_backdropLayer;
 
 //----------------------------------------------------------------
 function genEnemy(x, y) {
@@ -86,6 +88,7 @@ function generateLevelColumn(x) {
     'use strict';
     // loop counter, difficulty modifiers
     var i,
+        a = x + 16,
         e_count = 0,
         h = gameHeight - 128 - gn_smallHeight;
     
@@ -93,15 +96,16 @@ function generateLevelColumn(x) {
     for (i = 0; i < 4; i += 1) {
         // table priority
         if (Math.random() < gn_obstacleChance) { // obstacle
-            createTable(x, h, true);
+            createTable(a, h, true);
         } else if (Math.random() < gn_enemyChance && numEnemies < maxEnemies && e_count < maxEnemiesInColumn) { // enemy
-            genEnemy(x, h);
+            genEnemy(a, h);
             e_count += 1;
         } else if (gn_pickupSkip < 1 && Math.random() < gn_pickupChance && numPickups < maxPickups) { // pickup
-            createRandomWeaponPickup(x, h);
+            createRandomWeaponPickup(a, h);
             gn_pickupSkip = gn_pickupInterval;
         }
         h -= gn_bigHeight + gn_smallHeight;
+        a += 32;
     }
     if (gn_pickupSkip > 0) {
         gn_pickupSkip -= 1;
@@ -112,6 +116,7 @@ function generateLevelColumnNoBigObstacles(x) {
     'use strict';
     // loop counter, difficulty modifiers
     var i, l, p,
+        a = x,
         e_count = 0,
         maxFoliageInColumn = 4,
         foliageMask = [false, false, false, false, false, false, false, false, false],
@@ -135,16 +140,16 @@ function generateLevelColumnNoBigObstacles(x) {
         // check if there isn't already foliage
         if (!foliageMask[i]) {
             if ((i === 0 || i === gn_columnLength - 1) && Math.random() < gn_obstacleSmallChance) {
-                createParaphernaliaA(x, h);
+                createParaphernaliaA(a, h);
             } else if (Math.random() < gn_enemyChance && numEnemies < maxEnemies && e_count < maxEnemiesInColumn) { // enemy
-                genEnemy(x, h);
+                genEnemy(a, h);
                 e_count += 1;
             } else if (gn_pickupSkip < 1 && Math.random() < gn_pickupChance && numPickups < maxPickups) { // pickup
-                createRandomPickup(x, h);
+                createRandomPickup(a, h);
                 gn_pickupSkip = gn_pickupInterval;
             }
         } else {
-            createFoliage(x, h);
+            createFoliage(a, h);
         }
         // creation height adjustment
         if (isOdd(i)) {
@@ -152,6 +157,7 @@ function generateLevelColumnNoBigObstacles(x) {
         } else {
             h -= gn_smallHeight;
         }
+        a += 16;
     }
     if (gn_pickupSkip > 0) {
         gn_pickupSkip -= 1;
@@ -192,6 +198,12 @@ function generateLevel() {
             }
         }
     }
+}
+
+function initGenerator() {
+    'use strict';
+    game.world.resize(gameWidth * 32, gameHeight);
+    gn_backdropLayer = game.add.tileSprite(0, 130, game.world.width, 250, 'floorboard');
 }
 
 function initLevel() {

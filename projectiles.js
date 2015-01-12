@@ -9,6 +9,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile1,
             collision: collisionProjectile1
         },
         {   // catapult weapon
@@ -20,6 +21,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile2,
             collision: collisionProjectile2
         },
         {   // peashooter weapon
@@ -31,6 +33,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile3,
             collision: collisionProjectile3
         },
         {   // waterballoon weapon
@@ -42,6 +45,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile4,
             collision: collisionProjectile4
         },
         {   // paper plane weapon
@@ -53,6 +57,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile5,
             collision: collisionProjectile5
         },
         {   // stink bomb weapon
@@ -64,6 +69,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile6,
             collision: collisionProjectile6
         },
         {   // test tube weapon
@@ -75,6 +81,7 @@ var projectileTypes = [
             upgrade: 0,
             upgradeMax: 2,
             damages: [1, 2, 3],
+            createProjectile: createProjectile7,
             collision: collisionProjectile7
         }
     ];
@@ -96,7 +103,7 @@ var pj_text,
 function initProjectiles() {
     'use strict';
     var i;
-    
+
     pj_text = game.add.text(4, 20, projectileTypes[selectedProjectile].name, pj_textstyle);
     pj_text.fixedToCamera = true;
     
@@ -163,11 +170,10 @@ function createProjectile(shooter) {
         p.source = shooter;
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
-        p.reset(shooter.body.x, shooter.body.y);
-        if (shooter !== player) {
-            p.body.velocity.x = -t.speed;
-        } else {
-            p.body.velocity.x = t.speed;
+        p.reset(shooter.body.x, shooter.body.y - 20);
+        
+        if (t.createProjectile) {
+            t.createProjectile(p, t, shooter);
         }
     }
 }
@@ -188,10 +194,28 @@ function collisionProjectile1(p, q) {
     'use strict';
 }
 
+function createProjectile1(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
+}
+
 //----------------------------------------------------------------
 // projectile type 2
 function collisionProjectile2(p, q) {
     'use strict';
+}
+
+function createProjectile2(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
 }
 
 //----------------------------------------------------------------
@@ -200,10 +224,28 @@ function collisionProjectile3(p, q) {
     'use strict';
 }
 
+function createProjectile3(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
+}
+
 //----------------------------------------------------------------
 // projectile type 4
 function collisionProjectile4(p, q) {
     'use strict';
+}
+
+function createProjectile4(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
 }
 
 //----------------------------------------------------------------
@@ -212,16 +254,43 @@ function collisionProjectile5(p, q) {
     'use strict';
 }
 
+function createProjectile5(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
+}
+
 //----------------------------------------------------------------
 // projectile type 6
 function collisionProjectile6(p, q) {
     'use strict';
 }
 
+function createProjectile6(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
+}
+
 //----------------------------------------------------------------
 // projectile type 7
 function collisionProjectile7(p, q) {
     'use strict';
+}
+
+function createProjectile7(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
 }
 
 // --------------------------------------------------------------------------------------

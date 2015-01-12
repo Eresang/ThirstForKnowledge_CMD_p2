@@ -3,7 +3,7 @@ var maxObstacleCount = 200,
 
 // functions and variables for every type of projectile put in array for easy retrieval
 var obstacleTypes = [
-        {   // tables
+        {   // 0 tables
             sheet: 'tables',
             bodyWidth: 70,
             bodyHeight: 12,
@@ -12,7 +12,7 @@ var obstacleTypes = [
             bodyEnable: true,
             collision: null
         },
-        {   // chairs
+        {   // 1 chairs
             sheet: 'chairs',
             bodyWidth: 20,
             bodyHeight: 7,
@@ -21,7 +21,7 @@ var obstacleTypes = [
             bodyEnable: true,
             collision: null
         },
-        {   // foliage
+        {   // 2 foliage
             sheet: 'foliage',
             bodyWidth: 15,
             bodyHeight: 6,
@@ -30,37 +30,37 @@ var obstacleTypes = [
             bodyEnable: true,
             collision: null
         }, // here be paraphernalia
-        {   // full bucket
+        {   // 3 full bucket
             sheet: 'paraphernaliaA',
             bodyWidth: 13,
             bodyHeight: 6,
             bodyXOffset: 0,
-            bodyYOffset: 0,
+            bodyYOffset: -2,
             bodyEnable: true,
-            collision: collideWaterBucket,
+            collision: collideWaterBucketA,
             respin: 0.2
         },
-        {   // empty bucket with spill
+        {   // 4 empty bucket with spill
             sheet: 'paraphernaliaA',
-            bodyWidth: 13,
+            bodyWidth: 10,
             bodyHeight: 6,
-            bodyXOffset: 0,
-            bodyYOffset: 0,
-            bodyEnable: true,
-            collision: null,
-            respin: 0.2
-        },
-        {   // empty bucket
-            sheet: 'paraphernaliaA',
-            bodyWidth: 13,
-            bodyHeight: 6,
-            bodyXOffset: 0,
-            bodyYOffset: 0,
+            bodyXOffset: 4,
+            bodyYOffset: -2,
             bodyEnable: true,
             collision: null,
+            respin: 1.0
+        },
+        {   // 5 empty bucket
+            sheet: 'paraphernaliaA',
+            bodyWidth: 13,
+            bodyHeight: 6,
+            bodyXOffset: 0,
+            bodyYOffset: -2,
+            bodyEnable: true,
+            collision: collideWaterBucketB,
             respin: 0.2
         },
-        {   // waterspill
+        {   // 6 waterspill
             sheet: 'paraphernaliaA',
             bodyWidth: 0,
             bodyHeight: 0,
@@ -70,7 +70,17 @@ var obstacleTypes = [
             collision: null,
             respin: 0.2
         },
-        {   // trashbin
+        {   // 7 empty bucket, toppled
+            sheet: 'paraphernaliaA',
+            bodyWidth: 10,
+            bodyHeight: 6,
+            bodyXOffset: 4,
+            bodyYOffset: -2,
+            bodyEnable: true,
+            collision: null,
+            respin: 0.9
+        },
+        {   // 8 trashbin
             sheet: 'paraphernaliaA',
             bodyWidth: 13,
             bodyHeight: 8,
@@ -80,7 +90,7 @@ var obstacleTypes = [
             collision: null,
             respin: 0.3
         },
-        {   // globe
+        {   // 9 globe
             sheet: 'paraphernaliaA',
             bodyWidth: 19,
             bodyHeight: 6,
@@ -202,22 +212,35 @@ function createParaphernaliaA(x, y) {
     'use strict';
     var o, t, p;
     o = getObstacle();
-    p = Math.floor(Math.random() * 6);
+    p = Math.floor(Math.random() * 7);
     while (Math.random() < obstacleTypes[3 + p].respin) {
-        p = Math.floor(Math.random() * 6);
+        p = Math.floor(Math.random() * 7);
     }
     t = obstacleTypes[3 + p];
-    
     createObstacle(o, t);
     o.frame = p;
     o.reset(Math.floor(Math.random() * 2) + x, Math.floor(Math.random() * 3) + y - 1);
 }
 
 // --------------------------------------------------------------------------------------
-function collideWaterBucket(p, q) {
+function collideWaterBucketA(p, q) {
     'use strict';
     if (p === player && (q)) {
+        var t;
+        t = obstacleTypes[4];
         q.frame = 1;
+        q.body.setSize(t.bodyWidth, t.bodyHeight, t.bodyXOffset, t.bodyYOffset);
+        q.collideHandler = null;
+    }
+}
+
+function collideWaterBucketB(p, q) {
+    'use strict';
+    if (p === player && (q)) {
+        var t;
+        t = obstacleTypes[7];
+        q.frame = 4;
+        q.body.setSize(t.bodyWidth, t.bodyHeight, t.bodyXOffset, t.bodyYOffset);
         q.collideHandler = null;
     }
 }

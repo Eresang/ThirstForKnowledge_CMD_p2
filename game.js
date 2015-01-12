@@ -13,8 +13,9 @@ runner.prototype = {
         // starts the physics engine
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
+        initGenerator();
         maingroup = game.add.group();
-        initProjectiles();
+
         initPlayer();
         
         //starts advanced timing for fps debugger
@@ -25,6 +26,7 @@ runner.prototype = {
         
         initObstacles();
         initPickups();
+        initProjectiles();
         //spawnObstacle();
         
         initLevel();

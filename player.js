@@ -1,4 +1,4 @@
-var playerMoveSpeed = 180,
+var playerMoveSpeed = 80,
     pi_allowAnimation;
 
 var kc_leftKey;
@@ -6,27 +6,22 @@ var kc_leftKey;
 function initPlayer() {
     'use strict';
     // create player and physics body, set hitbox and anchor for collision
-    player = new Phaser.Sprite(game, gameWidth / 4, (gameHeight + 64) / 2, 'charactersheet', 0);
+    player = new Phaser.Sprite(game, gameWidth / 4, (gameHeight + 64) / 2, 'char_idle');
     game.physics.arcade.enable(player);
     player.body.collideWorldBounds = true;
-    player.body.setSize(32, 4, 0, 0); // edit values for new sprites?
+    player.body.setSize(20, 8, 0, 2); // edit values for new sprites?
     player.anchor.setTo(0.5, 1.0);
     
     // insert creating animations here
-    player.animations.add('character_idle', [0, 1]);
-    player.animations.add('character_move_up', [2, 3]);
-    player.animations.add('character_move_up_right', [4, 5]);
-    player.animations.add('character_move_right', [6, 7]);
-    player.animations.add('character_move_down_right', [8, 9]);
-    player.animations.add('character_move_down', [10, 11]);
-    player.animations.add('character_shoot', [12, 13]);
+    player.animations.add('character_idle');
+    player.animations.add('character_moving');
+    player.animations.add('character_shoot');
     
     player.events.onAnimationComplete.add(allowPlayerAnimation, this);
     
     // add it to maingroup
     maingroup.add(player);
     
-    game.world.resize(gameWidth * 32, gameHeight);
     game.camera.follow(player);
     game.camera.deadzone = new Phaser.Rectangle(100, 0, 100, gameHeight);
     
@@ -72,7 +67,8 @@ function checkPlayerInput() {
     // shooting
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
         if (playerShoot()) {
-            player.animations.play('character_shoot', 10, false);
+            player.loadTexture('char_shoot');
+            player.animations.play('character_shoot', 25, false);
             pi_allowAnimation = false;
         }
     }
@@ -96,24 +92,30 @@ function animatePlayer(movement, angle) {
 function setPlayerAnimations(movement, angle) {
     switch (angle) {
     case 180:
-        player.animations.play('character_move_up', 4, true);
+        player.loadTexture('char_moving');
+        player.animations.play('character_moving', 25, true);
         break;
     case 135:
-        player.animations.play('character_move_up_right', 4, true);
+        player.loadTexture('char_moving');
+        player.animations.play('character_moving', 25, true);
         break;
     case 90:
-        player.animations.play('character_move_right', 4, true);
+        player.loadTexture('char_moving');
+        player.animations.play('character_moving', 25, true);
         break;
     case 45:
-        player.animations.play('character_move_down_right', 4, true);
+        player.loadTexture('char_moving');
+        player.animations.play('character_moving', 25, true);
         break;
     case 0:
-        player.animations.play('character_move_down', 4, true);
+        player.loadTexture('char_moving');
+        player.animations.play('character_moving', 25, true);
         break;
     }
     // change animation if there is no motion
     if (movement) {
-        player.animations.play('character_idle', 10, true);
+        player.loadTexture('char_idle');
+        player.animations.play('character_idle', 25, true);
     }
 }
 
