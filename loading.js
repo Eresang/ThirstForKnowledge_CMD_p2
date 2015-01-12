@@ -19,7 +19,7 @@ loading.prototype = {
         this.load.spritesheet('char_moving', 'assets/char_walking.png', 32, 62, 10);
         this.load.spritesheet('char_shoot', 'assets/char_throw.png', 57, 62, 10);
         
-        this.load.spritesheet('ammosheet', 'assets/ammo.png', 23, 17);
+        this.load.spritesheet('ammosheet', 'assets/ammo.png', 23, 34);
         this.load.spritesheet('pickupsheet', 'assets/pickups_A.png', 18, 18);
         this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
         
@@ -27,7 +27,7 @@ loading.prototype = {
         this.load.spritesheet("chairs", "assets/chairs.png", 20, 30);
         this.load.spritesheet("foliage", "assets/foliage.png", 100, 51);
         this.load.spritesheet("paraphernaliaA", "assets/paraphernalia_A.png", 26, 32);
-        this.load.spritesheet('floorboard', 'assets/floorboard.png', 640, 250, 1);
+        this.load.spritesheet('backdrop', 'assets/backdrop.png', 640, 480, 1);
     },
     create: function () {
         'use strict';

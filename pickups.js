@@ -130,7 +130,7 @@ function createPickup(p, t) {
     if ((p) && (t)) {
         p.angle = 0;
         p.body.angle = 0;
-        p.body.setSize(12, 12, 3, 3);
+        p.body.setSize(12, 18, 3, 0);
         p.frame = t.frame;
         p.name = t.name;
         p.weapon = t.weapon;

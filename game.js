@@ -15,6 +15,7 @@ runner.prototype = {
         
         initGenerator();
         maingroup = game.add.group();
+        maingroup.enableBodyDebug = true;
 
         initPlayer();
         
@@ -43,7 +44,7 @@ runner.prototype = {
         killPickups();
         killProjectiles();
         
-        maingroup.sort('y', Phaser.Group.SORT_ASCENDING);
+        maingroup.sort("y", Phaser.Group.SORT_ASCENDING);
     },
     
     init: function () {
@@ -54,7 +55,10 @@ runner.prototype = {
     render: function () {
         'use strict';
         game.debug.body(player);
-        game.debug.text(maingroup.countLiving(), 2, 14);
+        maingroup.forEachAlive(function d(c) {
+            game.debug.body(c);
+        });
+        game.debug.text(maingroup.countLiving() + ' / ' + maingroup.children.length, 2, 14);
     }
     
 };

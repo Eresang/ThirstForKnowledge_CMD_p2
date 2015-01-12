@@ -137,9 +137,9 @@ function createObstacle(o, t) {
     if ((o) && (t)) {
         o.angle = 0;
         o.body.angle = 0;
+        o.loadTexture(t.sheet);
         o.body.setSize(t.bodyWidth, t.bodyHeight, t.bodyXOffset, t.bodyYOffset);
         o.body.enable = t.bodyEnable;
-        o.loadTexture(t.sheet);
         o.collideHandler = t.collision;
     }
 }

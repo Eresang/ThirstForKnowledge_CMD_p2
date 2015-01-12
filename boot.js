@@ -2,7 +2,7 @@
 var gameWidth = 640,
     gameHeight = 480;
 // create the game object and set it to create a canvas in parent container 'gameDiv'
-var game = new Phaser.Game(gameWidth, gameHeight, Phaser.WEBGL, 'gameDiv');
+var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameDiv');
 
 // the 'boot' game state;
 // it loads the loading bar graphic and sets up a couple of scaling options,

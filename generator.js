@@ -203,7 +203,7 @@ function generateLevel() {
 function initGenerator() {
     'use strict';
     game.world.resize(gameWidth * 32, gameHeight);
-    gn_backdropLayer = game.add.tileSprite(0, 130, game.world.width, 250, 'floorboard');
+    gn_backdropLayer = game.add.tileSprite(0, 0, game.world.width, gameHeight, 'backdrop');
 }
 
 function initLevel() {

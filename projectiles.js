@@ -4,7 +4,7 @@ var projectileTypes = [
             name: 'Triangle rulers',
             source: {},
             firerate: 15,
-            speed: 800,
+            speed: 100,
             frame: 0,
             upgrade: 0,
             upgradeMax: 2,
@@ -111,7 +111,7 @@ function initProjectiles() {
     for (i = 0; i < maxProjectileCount; i += 1) {
         projectiles[i] = maingroup.create(0, 0, 'ammosheet', 0);
         game.physics.arcade.enable(projectiles[i]);
-        projectiles[i].anchor.setTo(0.0, 1.0);
+        projectiles[i].anchor.setTo(0.5, 1.0);
         projectiles[i].kill();
     }
 }
@@ -170,8 +170,7 @@ function createProjectile(shooter) {
         p.source = shooter;
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
-        p.reset(shooter.body.x, shooter.body.y - 20);
-        
+        p.reset(shooter.x, shooter.y);
         if (t.createProjectile) {
             t.createProjectile(p, t, shooter);
         }
@@ -198,8 +197,11 @@ function createProjectile1(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(12, 15, 9, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(12, 15, -7, 1);
     }
 }
 
