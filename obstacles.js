@@ -130,7 +130,6 @@ function getObstacle() {
     }
     return p;
 }
-
 // --------------------------------------------------------------------------------------
 function createObstacle(o, t) {
     'use strict';

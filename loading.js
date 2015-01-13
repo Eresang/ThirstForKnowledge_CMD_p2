@@ -28,10 +28,29 @@ loading.prototype = {
         this.load.spritesheet("foliage", "assets/foliage.png", 100, 51);
         this.load.spritesheet("paraphernaliaA", "assets/paraphernalia_A.png", 26, 32);
         this.load.spritesheet('backdrop', 'assets/backdrop.png', 640, 480, 1);
+
+        this.load.spritesheet('charactersheet', 'assets/charactersheet.png', 64, 64);
+        this.load.spritesheet('projectilesheet', 'assets/projectilesheet.png', 48, 64);
+        this.load.spritesheet('canteenLady', 'assets/canteenLadyIdle.png', 35, 85);
+        this.load.spritesheet('canteenLadyDeath', 'assets/canteenLadyDeath.png', 91, 93);
+        // this.load.image('assetname', 'assets/ts_t0.png', 48, 48);
+        this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
+        this.load.image("obstacle", "assets/obstacle.png");
+        this.load.image("table", "assets/tafel.png");
+        this.load.spritesheet('ammosheet', 'assets/Ammo2.png', 24, 17);
+        this.load.spritesheet('pickupsheet', 'assets/Pickups_A.png', 18, 18);
+        this.load.spritesheet("enemy", "assets/baddie.png", 32, 32);
+        
+        this.load.spritesheet("tables", "assets/Tables.png", 70, 43);
+        this.load.spritesheet("chairs", "assets/Chairs.png", 20, 30);
+        this.load.spritesheet("foliage", "assets/Foliage.png", 100, 51);
+        this.load.spritesheet("paraphernaliaA", "assets/Paraphernalia_A.png", 26, 32);
+        this.load.image("startButton", "assets/startButton.png");
     },
+    
     create: function () {
         'use strict';
         // everything is loaded, time to start the game
-        this.game.state.start("Runner", true, false, true);
+        this.game.state.start("mainMenu", true, false, true);
     }
 };

@@ -72,7 +72,7 @@ var gn_backdropLayer;
 //----------------------------------------------------------------
 function genEnemy(x, y) {
     'use strict';
-    
+    createCanteenLady(x, y);
 }
 
 function genPickup(x, y) {

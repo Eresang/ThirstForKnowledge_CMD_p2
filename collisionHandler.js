@@ -1,7 +1,7 @@
 function collisionHandler () {
     
     //checks collision between enemies and obstacles
-    game.physics.arcade.collide(enemyArray, obstacles);
+    game.physics.arcade.collide(enemies, obstacles);
     
     //checks collision between the player and obstacles
     game.physics.arcade.collide(player, obstacles, function c(p, q) {
@@ -19,11 +19,29 @@ function collisionHandler () {
     
     //check collision between bullets and enemies
     //kills the bullet and enemy in the process
-    game.physics.arcade.collide(projectiles, enemyArray, killEnemy);
+    game.physics.arcade.overlap(projectiles, enemies, enemyHit);
+    game.physics.arcade.overlap(projectiles, player, damagePlayer);
+    
+    //game.physics.arcade.collide(player, enemies);
 }
 
-function killEnemy (projectile, enemy) {
-    projectile.kill();
-    enemy.kill();
-    console.log(enemyArray.length);
+function enemyHit (projectile, enemy) {
+    
+    if (enemy.living) {
+        if (projectile.source === player) {
+            projectile.kill();
+            enemyAnimations(enemy, 'death');
+            enemy.living = false;
+            enemy.body.velocity.y = 0;
+        } 
+    }
+    
+}
+
+function damagePlayer (projectile, player) {
+    
+    if (projectile.source != player) {
+        
+    }
+    
 }
