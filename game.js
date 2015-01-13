@@ -60,10 +60,10 @@ runner.prototype = {
     render: function () {
         'use strict';
         game.debug.body(player);
-        game.debug.geom(game.physics.arcade.bounds);
-        maingroup.forEachAlive(function d(c) {
-            game.debug.body(c);
-        });
+        //game.debug.geom(game.physics.arcade.bounds);
+        //maingroup.forEachAlive(function d(c) {
+    //        game.debug.body(c);
+      //  });
         game.debug.text(maingroup.countLiving() + ' / ' + maingroup.children.length, 2, 14);
         game.debug.text(maingroup.countLiving(), 2, 14);
         

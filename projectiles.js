@@ -88,11 +88,12 @@ var projectileTypes = [
             name: 'Mashed potatoes',
             source: {},
             firerate: 50,
-            speed: -300,
+            speed: 300,
             frame: 21,
             upgrade: 0,
             upgradeMax: 0,
             damages: [1],
+            createProjectile: createProjectile8,
             collision: collisionProjectile8
         }
     ];
@@ -304,12 +305,22 @@ function createProjectile7(p, t, q) {
     } else {
         p.body.velocity.x = t.speed;
     }
+}
 
 //----------------------------------------------------------------
 // projectile type 8
 function collisionProjectile8(p, q) {
     'use strict';
 
+}
+
+function createProjectile8(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
 }
 
 // --------------------------------------------------------------------------------------
