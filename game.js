@@ -55,6 +55,7 @@ runner.prototype = {
     render: function () {
         'use strict';
         game.debug.body(player);
+        game.debug.geom(game.physics.arcade.bounds);
         maingroup.forEachAlive(function d(c) {
             game.debug.body(c);
         });

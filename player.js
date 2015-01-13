@@ -13,9 +13,7 @@ function initPlayer() {
     player.anchor.setTo(0.5, 1.0);
     
     // insert creating animations here
-    player.animations.add('character_idle');
-    player.animations.add('character_moving');
-    player.animations.add('character_shoot');
+    player.animations.add('animation');
     
     player.events.onAnimationComplete.add(allowPlayerAnimation, this);
     
@@ -68,7 +66,7 @@ function checkPlayerInput() {
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
         if (playerShoot()) {
             player.loadTexture('char_shoot');
-            player.animations.play('character_shoot', 25, false);
+            player.animations.play('animation', 25, false);
             pi_allowAnimation = false;
         }
     }
@@ -93,30 +91,25 @@ function setPlayerAnimations(movement, angle) {
     switch (angle) {
     case 180:
         player.loadTexture('char_moving');
-        player.animations.play('character_moving', 25, true);
         break;
     case 135:
         player.loadTexture('char_moving');
-        player.animations.play('character_moving', 25, true);
         break;
     case 90:
         player.loadTexture('char_moving');
-        player.animations.play('character_moving', 25, true);
         break;
     case 45:
         player.loadTexture('char_moving');
-        player.animations.play('character_moving', 25, true);
         break;
     case 0:
         player.loadTexture('char_moving');
-        player.animations.play('character_moving', 25, true);
         break;
     }
     // change animation if there is no motion
     if (movement) {
         player.loadTexture('char_idle');
-        player.animations.play('character_idle', 25, true);
     }
+    player.animations.play('animation', 25, true);
 }
 
 function allowPlayerAnimation() {
