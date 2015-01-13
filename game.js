@@ -20,11 +20,12 @@ runner.prototype = {
         //starts advanced timing for fps debugger
         game.time.advancedTiming = true;
         
-        addEnemiesToArray();
+        //addEnemiesToArray();
         //spawnEnemy();
         
         initObstacles();
         initPickups();
+        initEnemies();
         //spawnObstacle();
         
         initLevel();
@@ -34,11 +35,13 @@ runner.prototype = {
         'use strict';
         checkPlayerInput();
         updateProjectiles();
+        incrementFireCounters();
         
         collisionHandler();
         generateLevel();
         
         killObstacles();
+        killEnemies();
         killPickups();
         killProjectiles();
         
@@ -55,6 +58,9 @@ runner.prototype = {
         'use strict';
         game.debug.body(player);
         game.debug.text(maingroup.countLiving(), 2, 14);
+        
+        // Input debug info
+        game.debug.inputInfo(32, 32);
     }
     
 };

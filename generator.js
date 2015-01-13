@@ -70,7 +70,7 @@ var gn_bigHeight = 32,
 //----------------------------------------------------------------
 function genEnemy(x, y) {
     'use strict';
-    
+    createCanteenLady(x, y);
 }
 
 function genPickup(x, y) {

@@ -76,6 +76,17 @@ var projectileTypes = [
             upgradeMax: 2,
             damages: [1, 2, 3],
             collision: collisionProjectile7
+        },
+        {
+            name: 'Mashed potatoes',
+            source: {},
+            firerate: 50,
+            speed: -300,
+            frame: 21,
+            upgrade: 0,
+            upgradeMax: 0,
+            damages: [1],
+            collision: collisionProjectile8
         }
     ];
 
@@ -152,11 +163,11 @@ function changeProjectileSelected(newProjectileSelected) {
     }
 }
 
-function createProjectile(shooter) {
+function createProjectile(shooter, projectile) {
     'use strict';
     var p, t;
     p = getProjectile();
-    t = projectileTypes[selectedProjectile];
+    t = projectileTypes[projectile];
     if (p) {
         p.angle = 0;
         p.body.angle = 0;
@@ -171,7 +182,7 @@ function createProjectile(shooter) {
 function playerShoot() {
     'use strict';
     if (projectileDelay >= fireRate) {
-        createProjectile(player);
+        createProjectile(player, selectedProjectile);
         projectileDelay = 0;
         return true;
     }
@@ -217,6 +228,12 @@ function collisionProjectile6(p, q) {
 //----------------------------------------------------------------
 // projectile type 7
 function collisionProjectile7(p, q) {
+    'use strict';
+}
+
+//----------------------------------------------------------------
+// projectile type 8
+function collisionProjectile8(p, q) {
     'use strict';
 }
 
