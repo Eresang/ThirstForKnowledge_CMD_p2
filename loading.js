@@ -51,6 +51,8 @@ loading.prototype = {
         this.load.spritesheet("foliage", "assets/Foliage.png", 100, 51);
         this.load.spritesheet("paraphernaliaA", "assets/Paraphernalia_A.png", 26, 32);
         this.load.image("startButton", "assets/startButton.png");
+        this.load.image("controlsButton", "assets/controlsButton.png");
+        this.load.image("creditsButton", "assets/creditsButton.png");
     },
     
     create: function () {
