@@ -92,9 +92,22 @@ var projectileTypes = [
             frame: 21,
             upgrade: 0,
             upgradeMax: 0,
-            damages: [1],
+            damages: [2],
             createProjectile: createProjectile8,
             collision: collisionProjectile8
+        },
+        {
+            name: 'Pen',
+            source: {},
+            firerate: 50,
+            speed: 300,
+            frame: 22,
+            upgrade: 0,
+            upgradeMax: 0,
+            damages: [2],
+            createProjectile: createProjectile9,
+            collision: collisionProjectile9
+            
         }
     ];
 
@@ -182,6 +195,7 @@ function createProjectile(shooter, projectile) {
         p.source = shooter;
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
+        p.damage = t.damages[(0 + t.upgrade)];
         p.reset(shooter.x, shooter.y);
         if (t.createProjectile) {
             t.createProjectile(p, t, shooter);
@@ -315,6 +329,22 @@ function collisionProjectile8(p, q) {
 }
 
 function createProjectile8(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
+    }
+}
+
+//----------------------------------------------------------------
+// projectile type 9
+function collisionProjectile9(p, q) {
+    'use strict';
+
+}
+
+function createProjectile9(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;

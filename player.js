@@ -12,6 +12,8 @@ function initPlayer() {
     player.body.setSize(20, 8, 0, 2); // edit values for new sprites?
     player.anchor.setTo(0.5, 1.0);
     
+    player.health = 10;
+    
     // insert creating animations here
     player.animations.add('animation');
     

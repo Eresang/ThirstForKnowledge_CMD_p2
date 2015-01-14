@@ -70,5 +70,4 @@ runner.prototype = {
         // Input debug info
         game.debug.inputInfo(32, 32);
     }
-    
 };

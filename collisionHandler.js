@@ -28,20 +28,24 @@ function collisionHandler () {
 function enemyHit (projectile, enemy) {
     
     if (enemy.living) {
+        projectile.kill();
         if (projectile.source === player) {
-            projectile.kill();
-            enemyAnimations(enemy, 'death');
-            enemy.living = false;
-            enemy.body.velocity.y = 0;
+            
+            enemy.hp = enemy.hp - projectile.damage;
+            
+            if (enemy.hp <= 0) {
+                enemyAnimations(enemy, 'death');
+                enemy.living = false;
+                enemy.body.velocity.y = 0;
+            }
         } 
     }
-    
 }
 
 function damagePlayer (projectile, player) {
     
     if (projectile.source != player) {
-        
-    }
-    
+        projectile.kill();
+        player.damage(1);
+    }    
 }

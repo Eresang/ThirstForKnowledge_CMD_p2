@@ -1,20 +1,22 @@
 var bulletTime = 0;
 
-function enemyAI () {
+var tempTest;
+
+function enemyAI() {
      
-    for (i = 0; i < enemies.length; i++) {
+    for (i = 0; i < enemies.length; i+=1) {
          
-        enemy = enemies[i];
+        var enemy = enemies[i];
         
-        if (enemy != null) {
+        if (enemy !== null) {
             
             if (enemy.living) {
-                if((enemy.x - player.x) < 300) {
+                if ((enemy.x - player.x) < 300) {
 
                     if (enemy.y > (player.y - 10) && enemy.y < (player.y + 10)) {
                         enemy.body.velocity.y = 0;
                     }
-                    else if (enemy.y < player.y ) {
+                    else if (enemy.y < player.y) {
                         enemy.body.velocity.y = 70;
                     }
                     else {
@@ -36,7 +38,8 @@ function enemyShoot (i) {
         enemyFireRate = projectileTypes[enemies[i].projectile].firerate;
         if (enemies[i].fireCounter > enemyFireRate) {
         
-            enemies[i].fireCounter = 0;        
+            enemies[i].fireCounter = 0; 
+            enemyAnimations(enemies[i], 'attack');
             createProjectile(enemies[i], enemies[i].projectile);
         }
     }   
@@ -66,7 +69,6 @@ var maxEnemyCount = 30,
 
 var enemyTypes = [ 
     {   // canteen lady
-        name: "Canteen lady",
         sheet: 'canteenLady',
         bodyWidth: 35,
         bodyHeight: 12,
@@ -75,9 +77,29 @@ var enemyTypes = [
         bodyEnable: true,
         projectile: 7,
         fireCounter: 0,
-        idleAnim: 'idle'
+        health: 7,
     },
     {
+        sheet: 'bully',
+        bodyWidth: 26,
+        bodyHeight: 12,
+        bodyXOffset: 0,
+        bodyYOffset: 2,
+        bodyEnable: true,
+        projectile: 1,
+        fireCounter: 0,
+        health: 5
+    },
+    {
+        sheet: 'principal',
+        bodyWidth: 26,
+        bodyHeight: 12,
+        bodyXOffset: 0,
+        bodyYOffset: 2,
+        bodyEnable: true,
+        projectile: 8,
+        fireCounter: 0,
+        health: 10
         
     }
 ];
@@ -106,7 +128,7 @@ function getEnemy() {
     var i,
         p = null;
     
-    for (i = 0; i < maxEnemyCount; i++) {
+    for (i = 0; i < maxEnemyCount; i += 1) {
         if (obstacles[i].alive === false) {
             p = enemies[i];
             return p;
@@ -124,10 +146,11 @@ function createEnemy(o, t) {
         o.body.enable = t.bodyEnable;
         o.loadTexture(t.sheet);
         o.animations.add('idle');
-        o.animations.play('idle', 30, true);
+        o.animations.play('idle', 10, true);
         o.collideHandler = t.collision;
         o.projectile = t.projectile;
         o.fireCounter = t.fireCounter;
+        o.hp = t.health;
         o.living = true;
     }
 }
@@ -143,20 +166,112 @@ function createCanteenLady(x, y) {
     
     createEnemy(o, t);
     o.frame = 0;
-    o.reset(x, y);
+    o.reset(x, y, t.health);
+}
+
+function createBully(x, y) {
+    var o, t;
+    o = getEnemy();
+    if (!(o)) {
+        return;
+    }
+    
+    t = enemyTypes[1];
+    createEnemy(o, t);
+    o.frame = 0;
+    o.reset(x, y, t.health);
+}
+
+function createPrincipal(x, y) {
+    var o, t;
+    o = getEnemy();
+    if (!(o)) {
+        return;
+    }
+    
+    t = enemyTypes[2];
+    createEnemy(o, t);
+    o.frame = 0;
+    o.reset(x, y, t.health);
 }
 
 function enemyAnimations(enemy, animation) {
     
-    console.log(enemy.key);
-    if (enemy.key === "canteenLady") {
+    if (enemy.key === "canteenLady" || enemy.key === "canteenLadyAttack") {
         
         if (animation === 'death') {
-            
-            console.log("death animation");
             enemy.loadTexture('canteenLadyDeath');
             enemy.animations.add('death');
             enemy.animations.play('death', 10, false);
         }
+        if (animation === 'attack') {
+            enemy.loadTexture('canteenLadyAttack');
+            enemy.animations.add('attack');
+            enemy.animations.play('attack', 10, false);
+            tempTest = enemy;
+            enemy.events.onAnimationComplete.add(playIdleAnimation, this);
+        }
+        if (animation === 'idle') {
+            enemy.loadTexture('canteenLady');
+            enemy.animations.add('idle');
+            enemy.animations.play('idle', 30, true);
+        }
+    }
+    if (enemy.key === "bully" || enemy.key === "bullyAttack") {
+        if (animation === 'death') {
+            enemy.loadTexture('bullyDeath');
+            enemy.animations.add('death');
+            enemy.animations.play('death', 10, false);
+        }
+        if (animation === 'attack') {
+            enemy.loadTexture('bullyAttack');
+            enemy.animations.add('attack');
+            enemy.animations.play('attack', 10, false);
+            tempTest = enemy;
+            enemy.events.onAnimationComplete.add(playIdleAnimation, this);
+        }
+        if (animation === 'idle') {
+            enemy.loadTexture('bully');
+            enemy.animations.add('idle');
+            enemy.animations.play('idle', 10, true);
+        }        
+    }
+    if (enemy.key === "principal" || enemy.key === "principalAttack") {
+        if (animation === 'death') {
+            enemy.loadTexture('principalDeath');
+            enemy.animations.add('death');
+            enemy.animations.play('death', 10, false);
+        }
+        if (animation === 'attack') {
+            enemy.loadTexture('principalAttack');
+            enemy.animations.add('attack');
+            enemy.animations.play('attack', 10, false);
+            tempTest = enemy;
+            enemy.events.onAnimationComplete.add(playIdleAnimation, this);
+        }
+        if (animation === 'idle') {
+            enemy.loadTexture('principal');
+            enemy.animations.add('idle');
+            enemy.animations.play('idle', 10, true);
+        }        
+    }
+}
+
+function playIdleAnimation() {
+    console.log(tempTest.key);
+    enemyAnimations(tempTest, 'idle');
+}
+
+function createRandomEnemy(x, y) {
+    random = Math.random();
+    
+    if (random <= 0.5) {
+        createBully(x, y);
+    }
+    else if (random > 0.5 && random <= 0.51) {
+        createCanteenLady(x, y);
+    }
+    else {
+        createPrincipal(x, y);
     }
 }
