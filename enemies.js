@@ -92,7 +92,7 @@ var enemyTypes = [
     },
     {
         sheet: 'principal',
-        bodyWidth: 26,
+        bodyWidth: 35,
         bodyHeight: 12,
         bodyXOffset: 0,
         bodyYOffset: 2,
@@ -143,6 +143,7 @@ function createEnemy(o, t) {
     if ((o) && (t)) {
         o.angle = 0;
         o.body.angle = 0;
+        o.body.setSize(t.bodyWidth, t.bodyHeight, t.bodyXOffset, t.bodyYOffset);
         o.body.enable = t.bodyEnable;
         o.loadTexture(t.sheet);
         o.animations.add('idle');
