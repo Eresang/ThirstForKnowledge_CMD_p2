@@ -3,14 +3,21 @@ var playerMoveSpeed = 80,
 
 var kc_leftKey;
 
+var pl_text,
+    pl_textstyle = { font: "bold 18pt Calibri", fill: "#000000", align: "left" };
+
 function initPlayer() {
     'use strict';
     // create player and physics body, set hitbox and anchor for collision
     player = new Phaser.Sprite(game, gameWidth / 4, (gameHeight + 64) / 2, 'char_idle');
     game.physics.arcade.enable(player);
     player.body.collideWorldBounds = true;
-    player.body.setSize(20, 8, 0, 2); // edit values for new sprites?
+    player.body.setSize(20, 12, 0, 2);
+    player.body.enable = true;
+    player.scale.x = -1;
     player.anchor.setTo(0.5, 1.0);
+    
+    player.hp = 100;
     
     // insert creating animations here
     player.animations.add('animation');
@@ -26,6 +33,38 @@ function initPlayer() {
     pi_allowAnimation = true;
     
     kc_leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    
+    pl_text = game.add.text(4, gameHeight - 38, player.hp, pl_textstyle);
+    pl_text.fixedToCamera = true;
+}
+
+function playerDamage(damage) {
+    'use strict';
+    if (player.hp > 0) {
+        player.hp -= damage;
+        if (player.hp <= 0) {
+            playerDeath();
+            player.living = false;
+            player.body.velocity.x = 0;
+            player.body.velocity.y = 0;
+            player.body.enable = false;
+        }
+        pl_text.setText(player.hp);
+    }
+}
+
+function playerHeal() {
+    'use strict';
+    player.hp = lowest(100, player.hp + 10);
+    pl_text.setText(player.hp);
+}
+
+function playerDeath() {
+    'use strict';
+    player.hp = 0;
+    player.loadTexture('char_died');
+    player.animations.play('animation', 25, false);
+    pi_allowAnimation = false;
 }
 
 // --------------------------------------------------------------------------------------
@@ -36,7 +75,6 @@ function checkPlayerInput() {
         m = 0;
     
     // player cannot move to the left
-    // creating the right angle in this way may be redundant, as a lot of keyboards register only a limited number of keys pressed simultaneously 
     if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
         m = 1;
     }
@@ -56,18 +94,25 @@ function checkPlayerInput() {
         }
         m = 1;
     }
+    
+    if (!pi_allowAnimation) {
+        m = 0;
+    }
+    
     // set speed according to angle
     player.body.velocity.x = playerMoveSpeed * Math.sin(Math.PI * movementAngle / 180) * m;
     player.body.velocity.y = playerMoveSpeed * Math.cos(Math.PI * movementAngle / 180) * m;
     // if the direction changed, change the accompanying animation
-    animatePlayer(m, movementAngle);
+    if (pi_allowAnimation) {
+        animatePlayer(m, movementAngle);
     
-    // shooting
-    if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-        if (playerShoot()) {
-            player.loadTexture('char_shoot');
-            player.animations.play('animation', 25, false);
-            pi_allowAnimation = false;
+        // shooting
+        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+            if (playerShoot()) {
+                player.loadTexture(projectileTypes[selectedProjectile].atkAnimation);
+                player.animations.play('animation', 25, false);
+                pi_allowAnimation = false;
+            }
         }
     }
 }
@@ -80,7 +125,7 @@ var pi_oldPlayerAngle = 90,
 function animatePlayer(movement, angle) {
     'use strict';
     // if angle hasn't changed or there is no movement, don't change animation
-    if ((angle !== pi_oldPlayerAngle || movement !== pi_oldM) && pi_allowAnimation === true) {
+    if ((angle !== pi_oldPlayerAngle || movement !== pi_oldM) && pi_allowAnimation) {
         setPlayerAnimations(movement === 0 && pi_oldM === 1, angle);
     }
     pi_oldPlayerAngle = angle;
@@ -114,6 +159,10 @@ function setPlayerAnimations(movement, angle) {
 
 function allowPlayerAnimation() {
     'use strict';
-    pi_allowAnimation = true;
-    setPlayerAnimations(pi_oldM === 0, pi_oldPlayerAngle);
+    if (player.hp <= 0) {
+        //player.kill();
+    } else {
+        pi_allowAnimation = true;
+        setPlayerAnimations(pi_oldM === 0, pi_oldPlayerAngle);
+    }
 }

@@ -26,6 +26,7 @@ runner.prototype = {
         //spawnEnemy();
         
         initObstacles();
+        initScenery();
         initPickups();
         initProjectiles();
         initEnemies();
@@ -44,6 +45,7 @@ runner.prototype = {
         generateLevel();
         
         killObstacles();
+        killScenery();
         killEnemies();
         killPickups();
         killProjectiles();
@@ -59,16 +61,16 @@ runner.prototype = {
     
     render: function () {
         'use strict';
-        game.debug.body(player);
-        //game.debug.geom(game.physics.arcade.bounds);
-        //maingroup.forEachAlive(function d(c) {
-    //        game.debug.body(c);
-      //  });
+       // game.debug.body(player);
+
+       // maingroup.forEachAlive(function d(c) {
+         //   game.debug.body(c);
+        //});
         game.debug.text(maingroup.countLiving() + ' / ' + maingroup.children.length, 2, 14);
         game.debug.text(maingroup.countLiving(), 2, 14);
         
         // Input debug info
-        game.debug.inputInfo(32, 32);
+       // game.debug.inputInfo(32, 32);
     }
     
 };

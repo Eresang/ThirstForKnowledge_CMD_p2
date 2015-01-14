@@ -52,7 +52,7 @@ var pickupTypes = [
         {   // health pickup
             name: 'health',
             frame: 8,
-            respin: 0.8,
+            respin: 0.4,
             weapon: -1,
             collision: collisionHealthpickup
         },
@@ -68,9 +68,9 @@ var pickupTypes = [
 var maxPickupCount = 20,
     pickups = [];
 
-var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", background: "#ffffff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
-    pu_textstyle2 = { font: "bold 14pt Calibri", fill: "#bbddff", stroke: "#000000", strokeThickness: 3.5, align: "left" },
-    pu_textstyle3 = { font: "bold 14pt Calibri", fill: "#bbffbb", stroke: "#000000", strokeThickness: 3.5, align: "left" };
+var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", stroke: "#000000", strokeThickness: 3.5, align: "center" },
+    pu_textstyle2 = { font: "bold 14pt Calibri", fill: "#bbddff", stroke: "#000000", strokeThickness: 3.5, align: "center" },
+    pu_textstyle3 = { font: "bold 14pt Calibri", fill: "#bbffbb", stroke: "#000000", strokeThickness: 3.5, align: "center" };
 
 // --------------------------------------------------------------------------------------
 function initPickups() {
@@ -152,7 +152,8 @@ function createRandomWeaponPickup(x, y) {
     t = pickupTypes[o];
     
     createPickup(p, t);
-    p.reset(x, y);
+    p.reset(x, y - 2);
+    game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
     numPickups += 1;
 }
 
@@ -170,7 +171,8 @@ function createRandomPickup(x, y) {
     t = pickupTypes[o];
     
     createPickup(p, t);
-    p.reset(x, y);
+    p.reset(x, y - 2);
+    game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
     numPickups += 1;
 }
 
@@ -199,6 +201,7 @@ function collisionHealthpickup(p, q) {
     if (p === player && (q)) {
         q.kill();
         pickupText(q.x, q.y, '+health', pu_textstyle3, true);
+        playerHeal(10);
         numPickups -= 1;
     }
 }

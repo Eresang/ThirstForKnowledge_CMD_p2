@@ -3,84 +3,91 @@ var projectileTypes = [
         {   // geo weapon
             name: 'Triangle rulers',
             source: {},
-            firerate: 15,
-            speed: 100,
+            firerate: 45,
+            speed: 280,
             frame: 0,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [20, 30, 50],
+            atkAnimation: 'char_throw',
             createProjectile: createProjectile1,
             collision: collisionProjectile1
         },
         {   // catapult weapon
             name: 'Catapult',
             source: {},
-            firerate: 30,
-            speed: 500,
+            firerate: 35,
+            speed: 300,
             frame: 3,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [15, 20, 35],
+            atkAnimation: 'char_throw',
             createProjectile: createProjectile2,
             collision: collisionProjectile2
         },
         {   // peashooter weapon
             name: 'Pea shooter',
             source: {},
-            firerate: 20,
-            speed: 300,
+            firerate: 40,
+            speed: 320,
             frame: 6,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [17, 25, 43],
+            atkAnimation: 'char_blow',
             createProjectile: createProjectile3,
             collision: collisionProjectile3
         },
         {   // waterballoon weapon
             name: 'Water balloons',
             source: {},
-            firerate: 60,
-            speed: 800,
+            firerate: 80,
+            speed: 220,
             frame: 9,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [32, 45, 60],
+            atkAnimation: 'char_throw',
             createProjectile: createProjectile4,
             collision: collisionProjectile4
         },
         {   // paper plane weapon
             name: 'Paper planes',
             source: {},
-            firerate: 30,
-            speed: 500,
+            firerate: 65,
+            speed: 180,
             frame: 12,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [35, 48, 65],
+            atkAnimation: 'char_throw',
             createProjectile: createProjectile5,
             collision: collisionProjectile5
         },
         {   // stink bomb weapon
             name: 'Stink bombs',
             source: {},
-            firerate: 20,
-            speed: 300,
+            firerate: 60,
+            speed: 240,
             frame: 15,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [42, 48, 56],
+            atkAnimation: 'char_throw',
             createProjectile: createProjectile6,
             collision: collisionProjectile6
         },
         {   // test tube weapon
             name: 'Test tubes',
             source: {},
-            firerate: 20,
-            speed: 300,
+            firerate: 90,
+            speed: 250,
             frame: 18,
             upgrade: 0,
             upgradeMax: 2,
-            damages: [1, 2, 3],
+            damages: [40, 54, 72],
+            atkAnimation: 'char_throw',
             createProjectile: createProjectile7,
             collision: collisionProjectile7
         },
@@ -92,9 +99,22 @@ var projectileTypes = [
             frame: 21,
             upgrade: 0,
             upgradeMax: 0,
-            damages: [1],
+            damages: [20],
             createProjectile: createProjectile8,
             collision: collisionProjectile8
+        },
+        {
+            name: 'Pen',
+            source: {},
+            firerate: 50,
+            speed: 300,
+            frame: 22,
+            upgrade: 0,
+            upgradeMax: 0,
+            damages: [30],
+            createProjectile: createProjectile9,
+            collision: collisionProjectile9
+            
         }
     ];
 
@@ -182,7 +202,8 @@ function createProjectile(shooter, projectile) {
         p.source = shooter;
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
-        p.reset(shooter.x, shooter.y);
+        p.damage = t.damages[(0 + t.upgrade)];
+        p.reset(shooter.x, shooter.y + 2);
         if (t.createProjectile) {
             t.createProjectile(p, t, shooter);
         }
@@ -200,20 +221,55 @@ function playerShoot() {
 }
 
 //----------------------------------------------------------------
+
+var dm_textstyle1 = { font: "bold 24pt Calibri", fill: "#dd2222", stroke: "#000000", strokeThickness: 4, align: "center" },
+    dm_textstyle2 = { font: "bold 24pt Calibri", fill: "#22dd22", stroke: "#000000", strokeThickness: 4, align: "center" };
+
+function dmgTextComplete(p, q) {
+    'use strict';
+    p.destroy(true);
+}
+
+function dmgText(x, y, text, style, left) {
+    'use strict';
+    var t, d;
+    d = game.add.text(0, 0, text, style);
+    d.y = -(d.height / 2) + y - 24;
+    d.alpha = 1;
+    t = game.add.tween(d);
+    t.onComplete = new Phaser.Signal();
+    t.onComplete.add(dmgTextComplete);
+    if (left) {
+        d.x = -(d.width / 2) + x + 12;
+        t.to({ alpha: 0, x: d.x - 32 }, 100, Phaser.Easing.Linear.None, false, 200).start();
+    } else {
+        d.x = -(d.width / 2) + x - 12;
+        t.to({ alpha: 0, x: d.x + 32 }, 100, Phaser.Easing.Linear.None, false, 200).start();        
+    }
+    
+}
+
+//----------------------------------------------------------------
 // projectile type 1
 function collisionProjectile1(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
 }
 
 function createProjectile1(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;
-        p.body.setSize(12, 15, 9, 1);
+        p.body.setSize(8, 15, -2, 1);
         p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
-        p.body.setSize(12, 15, -7, 1);
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
 }
 
@@ -221,14 +277,23 @@ function createProjectile1(p, t, q) {
 // projectile type 2
 function collisionProjectile2(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
 }
 
 function createProjectile2(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
 }
 
@@ -236,14 +301,23 @@ function createProjectile2(p, t, q) {
 // projectile type 3
 function collisionProjectile3(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
 }
 
 function createProjectile3(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
 }
 
@@ -251,29 +325,58 @@ function createProjectile3(p, t, q) {
 // projectile type 4
 function collisionProjectile4(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
+}
+
+function explodeProjectile4(p, q) {
+    'use strict';
+    p.kill();
 }
 
 function createProjectile4(p, t, q) {
     'use strict';
+    var t;
+    
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
+    t = game.add.tween(p);
+    t.onComplete = new Phaser.Signal();
+    t.onComplete.add(explodeProjectile4);
+    t.to( { y: p.y - 20 }, 800, Phaser.Easing.Sinusoidal.In, true, 0, 0, true);
 }
 
 //----------------------------------------------------------------
 // projectile type 5
 function collisionProjectile5(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
 }
 
 function createProjectile5(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
 }
 
@@ -281,45 +384,117 @@ function createProjectile5(p, t, q) {
 // projectile type 6
 function collisionProjectile6(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
+}
+
+function explodeProjectile6(p, q) {
+    'use strict';
+    p.kill();
 }
 
 function createProjectile6(p, t, q) {
     'use strict';
+    var t;
+    
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
+    t = game.add.tween(p);
+    t.onComplete = new Phaser.Signal();
+    t.onComplete.add(explodeProjectile6);
+    t.to( { y: p.y - 20 }, 800, Phaser.Easing.Quadratic.None, true, 0, 0, true)
 }
 
 //----------------------------------------------------------------
 // projectile type 7
 function collisionProjectile7(p, q) {
     'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
+}
+
+function explodeProjectile6(p, q) {
+    'use strict';
+    p.kill();
 }
 
 function createProjectile7(p, t, q) {
     'use strict';
+    var t;
+    
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
+    t = game.add.tween(p);
+    t.onComplete = new Phaser.Signal();
+    t.onComplete.add(explodeProjectile7);
+    t.to( { y: p.y - 20 }, 800, Phaser.Easing.Quadratic.None, true, 0, 0, true)
 }
 
 //----------------------------------------------------------------
 // projectile type 8
 function collisionProjectile8(p, q) {
     'use strict';
-
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
 }
 
 function createProjectile8(p, t, q) {
     'use strict';
     if (q !== player) {
         p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
     } else {
         p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
+    }
+}
+
+//----------------------------------------------------------------
+// projectile type 9
+function collisionProjectile9(p, q) {
+    'use strict';
+    if (p === player) {
+        dmgText(p.x, p.y, q.damage, dm_textstyle1, false);
+    } else {
+        dmgText(p.x, p.y, q.damage, dm_textstyle2, false);      
+    }
+}
+
+function createProjectile9(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+        p.body.setSize(8, 15, -2, 1);
+        p.scale.x = -1;
+    } else {
+        p.body.velocity.x = t.speed;
+        p.body.setSize(8, 15, 2, 1);
+        p.scale.x = 1;
     }
 }
 
@@ -329,7 +504,7 @@ function killProjectiles() {
     var i;
     
     for (i = 0; i < projectiles.length; i += 1) {
-        if ((projectiles[i].x > game.camera.x + gameWidth || projectiles[i].x < game.camera.x - projectiles[i].width) && projectiles[i].alive) {
+        if ((projectiles[i].x > game.camera.x + gameWidth || projectiles[i].x < game.camera.x) && projectiles[i].alive) {
             projectiles[i].kill();
         }
     }
