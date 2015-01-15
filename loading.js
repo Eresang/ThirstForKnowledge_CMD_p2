@@ -53,6 +53,11 @@ loading.prototype = {
         this.load.image("startButton", "assets/startButton.png");
         this.load.image("controlsButton", "assets/controlsButton.png");
         this.load.image("creditsButton", "assets/creditsButton.png");
+        this.load.spritesheet('soundButton', 'assets/soundButton.png', 65, 64);
+        this.load.image('title', 'assets/gameTitle.png');
+        
+        this.load.image('closeButton', 'assets/closeButton.png');
+        this.load.image('controls', 'assets/controlScreen.png');
     },
     
     create: function () {
