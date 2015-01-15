@@ -1,10 +1,22 @@
 var playerMoveSpeed = 80,
     pi_allowAnimation;
 
-var kc_leftKey;
+var difficultyModifier = 2,
+    difficultyModifierInverse = 1;
 
-var pl_text,
-    pl_textstyle = { font: "bold 18pt Calibri", fill: "#000000", align: "left" };
+var damageTaken = 0,
+    sc_text,
+    sc_textstyle = { font: "bold 28pt Verdana", fill: "#dd2222", stroke: "#000000", strokeThickness: 8, align: "center" },
+    sc_textstyleB = { font: "bold 28pt Verdana", fill: "#22dd22", stroke: "#000000", strokeThickness: 8, align: "center" },
+    scoreTexts = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F'];
+
+var kc_leftKey,
+    kc_spacekey;
+
+function getScore() {
+    'use strict';
+    return scoreTexts[lowest(Math.floor(damageTaken / 30), scoreTexts.length - 1)];
+}
 
 function initPlayer() {
     'use strict';
@@ -18,6 +30,8 @@ function initPlayer() {
     player.anchor.setTo(0.5, 1.0);
     
     player.hp = 100;
+    player.wisdom = 100;
+    player.score = 0;
     
     // insert creating animations here
     player.animations.add('animation');
@@ -32,16 +46,42 @@ function initPlayer() {
     
     pi_allowAnimation = true;
     
-    kc_leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-    
-    pl_text = game.add.text(4, gameHeight - 38, player.hp, pl_textstyle);
-    pl_text.fixedToCamera = true;
+    kc_leftKey = game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
+    kc_spacekey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    kc_leftKey.onDown.add(playerSpeedUp);
+    kc_leftKey.onUp.add(playerSpeedDown);
+    kc_spacekey.onUp.add(playerSpace);
+}
+
+function playerSpace() {
+    'use strict';
+    if (player.hp <= 0 || gn_stageComplete) {
+        restartLevel();
+        sc_text.destroy(true);
+    }
+}
+
+function difficultyUp() {
+    'use strict';
+    difficultyModifier *= 0.9;
+    difficultyModifierInverse = 3 - difficultyModifier;
+}
+
+function playerSpeedUp() {
+    'use strict';
+    playerMoveSpeed = 120;
+}
+
+function playerSpeedDown() {
+    'use strict';
+    playerMoveSpeed = 80;
 }
 
 function playerDamage(damage) {
     'use strict';
     if (player.hp > 0) {
         player.hp -= damage;
+        damageTaken += damage;
         if (player.hp <= 0) {
             playerDeath();
             player.living = false;
@@ -49,14 +89,35 @@ function playerDamage(damage) {
             player.body.velocity.y = 0;
             player.body.enable = false;
         }
-        pl_text.setText(player.hp);
+        pl_text.setText('HP: ' + player.hp);
     }
 }
 
-function playerHeal() {
+function playerRevive() {
     'use strict';
-    player.hp = lowest(100, player.hp + 10);
-    pl_text.setText(player.hp);
+    playerHeal(100);
+    player.reset(gameWidth / 4, (gameHeight + 64) / 2);
+    player.living = true;
+    player.body.enable = true;
+    player.loadTexture('char_idle');
+    player.animations.play('animation', 25, true);
+}
+
+function playerHeal(amount) {
+    'use strict';
+    player.hp = lowest(100, player.hp + amount);
+    pl_text.setText('Health: ' + player.hp);
+}
+
+function playerWisen(amount) {
+    'use strict';
+    player.wisdom += amount;
+    pw_text.setText('Knowledge: ' + player.wisdom);
+    if (upgradePossible()) {
+        upgradebutton.frame = 0;
+    } else {
+        upgradebutton.frame = 1;
+    }
 }
 
 function playerDeath() {
@@ -65,6 +126,11 @@ function playerDeath() {
     player.loadTexture('char_died');
     player.animations.play('animation', 25, false);
     pi_allowAnimation = false;
+    
+    sc_text = game.add.text(0, 0, 'You have been defeated\nYour grade: ' + getScore() + '\n\nPress space to continue...', sc_textstyle);
+    sc_text.x = -(sc_text.width / 2) + (gameWidth / 2);
+    sc_text.y = -(sc_text.height / 2) + (gameHeight / 2);
+    sc_text.fixedToCamera = true;
 }
 
 // --------------------------------------------------------------------------------------
@@ -73,6 +139,12 @@ function checkPlayerInput() {
     'use strict';
     var movementAngle = 90,
         m = 0;
+    
+    if (player.hp <=0) {
+        
+        return;
+    }
+    
     
     // player cannot move to the left
     if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
@@ -100,7 +172,7 @@ function checkPlayerInput() {
     }
     
     // set speed according to angle
-    player.body.velocity.x = playerMoveSpeed * Math.sin(Math.PI * movementAngle / 180) * m;
+    player.body.velocity.x = playerMoveSpeed * Math.sin(Math.PI * movementAngle / 180) * m * stopScroll;
     player.body.velocity.y = playerMoveSpeed * Math.cos(Math.PI * movementAngle / 180) * m;
     // if the direction changed, change the accompanying animation
     if (pi_allowAnimation) {
@@ -159,9 +231,7 @@ function setPlayerAnimations(movement, angle) {
 
 function allowPlayerAnimation() {
     'use strict';
-    if (player.hp <= 0) {
-        //player.kill();
-    } else {
+    if (player.hp > 0) {
         pi_allowAnimation = true;
         setPlayerAnimations(pi_oldM === 0, pi_oldPlayerAngle);
     }

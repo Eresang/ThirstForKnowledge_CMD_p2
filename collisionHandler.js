@@ -10,8 +10,13 @@ function collisionHandler() {
         }
     });
     
+    //checks collision between the player and enemies
+    game.physics.arcade.collide(player, enemies, function c(p, q) {
+        playerDamage(2);
+    });
+    
     //checks collision between the player and pickups
-    game.physics.arcade.collide(player, pickups, function c(p, q) {
+    game.physics.arcade.overlap(player, pickups, function c(p, q) {
         if (q.collideHandler) {
             q.collideHandler(p, q);
         }
@@ -27,6 +32,7 @@ function collisionHandler() {
 
 function enemyFade(p, q) {
     'use strict';
+    p.tween.manager.remove(p.tween);
     p.kill();
 }
 
@@ -45,11 +51,13 @@ function enemyHit (projectile, enemy) {
                 enemy.living = false;
                 enemy.body.velocity.y = 0;
                 enemy.body.enable = false;
+                difficultyUp();
                 t = game.add.tween(enemy);
+                enemy.tween = t;
                 t.onComplete = new Phaser.Signal();
                 t.onComplete.add(enemyFade);
                 t.to({ alpha: 0 }, 800, Phaser.Easing.Linear.None, false, 250).start();
-                createRandomPickup(enemy.x, enemy.y);
+                createBookOrHealthPickup(enemy.x, enemy.y);
             }
         }
     }

@@ -44,7 +44,10 @@ loading.prototype = {
 
         this.load.spritesheet('ammosheet', 'assets/Ammo2.png', 24, 52);
         
-        this.load.image("startButton", "assets/startButton.png");
+        this.load.image("status_back", "assets/statusbarback.png", 480, 80);
+        this.load.image("title_text", "assets/titletext.png", 600, 46);
+        this.load.spritesheet('mute_button', 'assets/mute_button.png', 64, 59);
+        this.load.spritesheet('upgrade_button', 'assets/upgrade_button.png', 177, 37);
     },
     
     create: function () {

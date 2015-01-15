@@ -15,23 +15,17 @@ runner.prototype = {
         
         initGenerator();
         maingroup = game.add.group();
-        maingroup.enableBodyDebug = true;
+        //maingroup.enableBodyDebug = true;
+        
+        interfacegroup = game.add.group();
 
         initPlayer();
-        
-        //starts advanced timing for fps debugger
-        game.time.advancedTiming = true;
-        
-        //addEnemiesToArray();
-        //spawnEnemy();
-        
+        initStatusbar();
         initObstacles();
         initScenery();
         initPickups();
         initProjectiles();
         initEnemies();
-        //spawnObstacle();
-        
         initLevel();
     },
     
@@ -63,9 +57,9 @@ runner.prototype = {
         'use strict';
        // game.debug.body(player);
 
-       // maingroup.forEachAlive(function d(c) {
-         //   game.debug.body(c);
-        //});
+        //maingroup.forEachAlive(function d(c) {
+       //     game.debug.body(c);
+     //   });
         game.debug.text(maingroup.countLiving() + ' / ' + maingroup.children.length, 2, 14);
         game.debug.text(maingroup.countLiving(), 2, 14);
         

@@ -24,8 +24,8 @@ boot.prototype = {
 	    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.minWidth = gameWidth / 2;
         this.scale.minHeight = gameHeight / 2;
-        this.scale.maxWidth = gameWidth;
-        this.scale.maxHeight = gameHeight;
+        this.scale.maxWidth = gameWidth * 4;
+        this.scale.maxHeight = gameHeight * 4;
 	    this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
         // refresh layout

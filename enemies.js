@@ -4,6 +4,9 @@ var tempTest;
 
 function enemyAI() {
      
+    if (player.hp <= 0) {
+        return;
+    }
     for (i = 0; i < enemies.length; i+=1) {
          
         var enemy = enemies[i];
@@ -11,7 +14,7 @@ function enemyAI() {
         if (enemy !== null) {
             
             if (enemy.living) {
-                if ((enemy.x - player.x) < 500) {
+                if ((enemy.x - player.x) < 540) {
 
                     if (enemy.y > (player.y - 10) && enemy.y < (player.y + 10)) {
                         enemy.body.velocity.y = 0;
@@ -23,6 +26,8 @@ function enemyAI() {
                         enemy.body.velocity.y = -70;
                     }
                 }
+            }
+            if ((enemy.x - player.x) < 480) {
                 if (((enemy.y > (player.y - 10) && enemy.y < (player.y + 10)) && enemy.alive === true) && enemy.x > player.x) {
                     enemyShoot(i);
                 }  
@@ -34,7 +39,7 @@ function enemyAI() {
 function enemyShoot (i) {
     
     if (enemies[i].living) {
-        enemyFireRate = projectileTypes[enemies[i].projectile].firerate;
+        enemyFireRate = projectileTypes[enemies[i].projectile].firerate * difficultyModifier;
         if (enemies[i].fireCounter > enemyFireRate) {
         
             enemies[i].fireCounter = 0; 
@@ -144,6 +149,7 @@ function createEnemy(o, t) {
         o.body.angle = 0;
         o.body.enable = t.bodyEnable;
         o.loadTexture(t.sheet);
+        o.onDeath = null;
         o.animations.add('idle');
         o.animations.play('idle', 10, true);
         o.collideHandler = t.collision;
@@ -190,6 +196,30 @@ function createPrincipal(x, y) {
     
     t = enemyTypes[2];
     createEnemy(o, t);
+    o.frame = 0;
+    o.reset(x, y, t.health);
+}
+
+function specialDeath() {
+    'use strict';
+    gn_stageComplete = true;
+    
+    sc_text = game.add.text(0, 0, 'Stage complete!\nYour grade: ' + getScore() + '\n\nPress space to continue...', sc_textstyleB);
+    sc_text.x = -(sc_text.width / 2) + (gameWidth / 2);
+    sc_text.y = -(sc_text.height / 2) + (gameHeight / 2);
+    sc_text.fixedToCamera = true;
+}
+
+function createPrimePrincipal(x, y) {
+    var o, t;
+    o = getEnemy();
+    if (!(o)) {
+        return;
+    }
+    
+    t = enemyTypes[2];
+    createEnemy(o, t);
+    o.onDeath = specialDeath;
     o.frame = 0;
     o.reset(x, y, t.health);
 }

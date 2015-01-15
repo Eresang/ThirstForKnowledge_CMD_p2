@@ -68,9 +68,9 @@ var pickupTypes = [
 var maxPickupCount = 20,
     pickups = [];
 
-var pu_textstyle1 = { font: "bold 14pt Calibri", fill: "#ffffff", stroke: "#000000", strokeThickness: 3.5, align: "center" },
-    pu_textstyle2 = { font: "bold 14pt Calibri", fill: "#bbddff", stroke: "#000000", strokeThickness: 3.5, align: "center" },
-    pu_textstyle3 = { font: "bold 14pt Calibri", fill: "#bbffbb", stroke: "#000000", strokeThickness: 3.5, align: "center" };
+var pu_textstyle1 = { font: "bold 14pt Verdana", fill: "#ffffff", stroke: "#000000", strokeThickness: 4.5, align: "center" },
+    pu_textstyle2 = { font: "bold 10pt Verdana", fill: "#bbddff", stroke: "#000000", strokeThickness: 4.5, align: "center" },
+    pu_textstyle3 = { font: "bold 10pt Verdana", fill: "#bbffbb", stroke: "#000000", strokeThickness: 4.5, align: "center" };
 
 // --------------------------------------------------------------------------------------
 function initPickups() {
@@ -104,6 +104,7 @@ function getPickup() {
 // --------------------------------------------------------------------------------------
 function pickupTextComplete(p, q) {
     'use strict';
+    p.tween.manager.remove(p.tween);
     p.destroy(true);
 }
 
@@ -115,6 +116,7 @@ function pickupText(x, y, text, style, up) {
     d.y = -(d.height / 2) + y;
     d.alpha = 1;
     t = game.add.tween(d);
+    d.tween = t;
     t.onComplete = new Phaser.Signal();
     t.onComplete.add(pickupTextComplete);
     if (up) {
@@ -153,7 +155,27 @@ function createRandomWeaponPickup(x, y) {
     
     createPickup(p, t);
     p.reset(x, y - 2);
-    game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    p.tween = game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    
+    numPickups += 1;
+}
+
+function createBookOrHealthPickup(x, y) {
+    'use strict';
+    var p, t;
+    p = getPickup();
+    if (!(p)) {
+        return;
+    }
+    if (Math.random() < 0.4) {
+        t = pickupTypes[7]; // health
+    } else {
+        t = pickupTypes[8]; // book
+    }
+    
+    createPickup(p, t);
+    p.reset(x, y - 2);
+    p.tween = game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
     numPickups += 1;
 }
 
@@ -172,38 +194,48 @@ function createRandomPickup(x, y) {
     
     createPickup(p, t);
     p.reset(x, y - 2);
-    game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    p.tween = game.add.tween(p).to( { y: y + 2 }, 400, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
     numPickups += 1;
 }
 
 // --------------------------------------------------------------------------------------
 function collisionBookpickup(p, q) {
     'use strict';
-    if (p === player && (q)) {
-        pickupText(q.x, q.y, '+wisdom', pu_textstyle2, true);
-        q.kill();
-        numPickups -= 1;
-    }
+    var w;
+
+    w = Math.floor(20 * difficultyModifier);
+    q.tween.manager.remove(q.tween);
+    q.kill();
+    playerWisen(w);
+    pickupText(q.x, q.y, '+' + w + ' knowledge', pu_textstyle2, true);
+    numPickups -= 1;
+
 }
 
 function collisionWeaponpickup(p, q) {
     'use strict';
-    if (p === player && (q)) {
-        changeProjectileSelected(q.weapon);
-        pickupText(q.x, q.y, q.name, pu_textstyle1, false);
-        q.kill();
-        numPickups -= 1;
-    }
+
+    changeProjectileSelected(q.weapon);
+    pickupText(q.x, q.y, q.name, pu_textstyle1, false);
+    q.tween.manager.remove(q.tween);
+    q.kill();
+    numPickups -= 1;
+
 }
 
 function collisionHealthpickup(p, q) {
     'use strict';
-    if (p === player && (q)) {
+    var h;
+
+    if (player.hp < 100) {
+        q.tween.manager.remove(q.tween);
         q.kill();
-        pickupText(q.x, q.y, '+health', pu_textstyle3, true);
-        playerHeal(10);
+        h = Math.floor(15 * difficultyModifier);
+        pickupText(q.x, q.y, '+' + h + ' health', pu_textstyle3, true);
+        playerHeal(h);
         numPickups -= 1;
     }
+
 }
 
 // --------------------------------------------------------------------------------------
@@ -213,6 +245,9 @@ function killPickups() {
     
     for (i = 0; i < pickups.length; i += 1) {
         if (pickups[i].x < game.camera.x - pickups[i].width && pickups[i].alive) {
+            if (pickups[i].tween) {
+                pickups[i].tween.manager.remove(pickups[i].tween);
+            }
             pickups[i].kill();
             numPickups -= 1;
         }
