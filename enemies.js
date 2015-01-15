@@ -26,7 +26,7 @@ function enemyAI() {
                         enemy.body.velocity.y = -70;
                     }
                 }
-            }
+
             if ((enemy.x - player.x) < 480) {
                 if (((enemy.y > (player.y - 10) && enemy.y < (player.y + 10)) && enemy.alive === true) && enemy.x > player.x) {
                     enemyShoot(i);

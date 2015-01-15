@@ -13,6 +13,7 @@ function collisionHandler() {
     //checks collision between the player and enemies
     game.physics.arcade.collide(player, enemies, function c(p, q) {
         playerDamage(2);
+        player.body.velocity.x = 0;
     });
     
     //checks collision between the player and pickups
@@ -41,7 +42,9 @@ function enemyHit (projectile, enemy) {
     if (enemy.living) {
         if (projectile.source === player) {
             enemy.hp = enemy.hp - projectile.damage;
-            
+            if (projectile.collideHandler) {
+                projectile.collideHandler(enemy, projectile);
+            }  
             if (enemy.hp <= 0) {
                 enemyAnimations(enemy, 'death');
                 enemy.living = false;
@@ -56,7 +59,7 @@ function enemyHit (projectile, enemy) {
                 createBookOrHealthPickup(enemy.x, enemy.y);
             }
             projectile.kill();
-        } else {
+        } else if (projectile.source !== enemy) {
             projectile.kill();
         }
     }
@@ -65,10 +68,10 @@ function enemyHit (projectile, enemy) {
 function damagePlayer (projectile, player) {
 
     if (projectile.source !== player) {
+        playerDamage(projectile.damage);
         if (projectile.collideHandler) {
             projectile.collideHandler(player, projectile);
         }
         projectile.kill();   
-        playerDamage(projectile.damage);
     }
 }

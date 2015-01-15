@@ -222,8 +222,9 @@ function createProjectile(shooter, projectile) {
         p.body.angle = 0;
         p.source = shooter;
         p.collideHandler = t.collision;
+        p.damage = t.damages[t.upgrade];
         p.frame = t.frame + t.upgrade;
- 
+        p.reset(shooter.x, shooter.y);
         if (shooter === player) {
             p.body.velocity.x = t.speed;
         } else {
