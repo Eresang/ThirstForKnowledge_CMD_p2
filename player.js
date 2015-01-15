@@ -29,6 +29,7 @@ function initPlayer() {
     player.scale.x = -1;
     player.anchor.setTo(0.5, 1.0);
     
+
     player.hp = 100;
     player.wisdom = 100;
     player.score = 0;

@@ -3,17 +3,17 @@ var bulletTime = 0;
 var tempTest;
 
 function enemyAI() {
-     
+
     if (player.hp <= 0) {
         return;
     }
+
     for (i = 0; i < enemies.length; i+=1) {
          
         var enemy = enemies[i];
         
         if (enemy !== null) {
             
-            if (enemy.living) {
                 if ((enemy.x - player.x) < 540) {
 
                     if (enemy.y > (player.y - 10) && enemy.y < (player.y + 10)) {
@@ -82,6 +82,7 @@ var enemyTypes = [
         projectile: 7,
         fireCounter: 0,
         health: 50,
+
     },
     {
         sheet: 'bully',
@@ -96,15 +97,14 @@ var enemyTypes = [
     },
     {
         sheet: 'principal',
-        bodyWidth: 26,
+        bodyWidth: 35,
         bodyHeight: 12,
         bodyXOffset: 0,
         bodyYOffset: 2,
         bodyEnable: true,
         projectile: 8,
         fireCounter: 0,
-        health: 80
-        
+        health: 80        
     }
 ];
 
@@ -147,6 +147,7 @@ function createEnemy(o, t) {
     if ((o) && (t)) {
         o.angle = 0;
         o.body.angle = 0;
+        o.body.setSize(t.bodyWidth, t.bodyHeight, t.bodyXOffset, t.bodyYOffset);
         o.body.enable = t.bodyEnable;
         o.loadTexture(t.sheet);
         o.onDeath = null;

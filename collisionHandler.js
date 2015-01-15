@@ -38,11 +38,7 @@ function enemyFade(p, q) {
 
 function enemyHit (projectile, enemy) {
     
-    if (projectile.source !== enemy) {
-        if (projectile.collideHandler) {
-            projectile.collideHandler(enemy, projectile);
-        }
-        projectile.kill();
+    if (enemy.living) {
         if (projectile.source === player) {
             enemy.hp = enemy.hp - projectile.damage;
             
@@ -59,13 +55,15 @@ function enemyHit (projectile, enemy) {
                 t.to({ alpha: 0 }, 800, Phaser.Easing.Linear.None, false, 250).start();
                 createBookOrHealthPickup(enemy.x, enemy.y);
             }
+            projectile.kill();
+        } else {
+            projectile.kill();
         }
     }
-    
 }
 
 function damagePlayer (projectile, player) {
-    
+
     if (projectile.source !== player) {
         if (projectile.collideHandler) {
             projectile.collideHandler(player, projectile);
@@ -73,5 +71,4 @@ function damagePlayer (projectile, player) {
         projectile.kill();   
         playerDamage(projectile.damage);
     }
-    
 }

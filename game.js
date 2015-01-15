@@ -10,12 +10,11 @@ runner.prototype = {
     create: function () {
         'use strict';
         game.stage.backgroundColor = "#dec56f";
-        // starts the physics engine
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         initGenerator();
         maingroup = game.add.group();
-        //maingroup.enableBodyDebug = true;
         
         interfacegroup = game.add.group();
 
@@ -55,16 +54,6 @@ runner.prototype = {
     
     render: function () {
         'use strict';
-       // game.debug.body(player);
 
-        //maingroup.forEachAlive(function d(c) {
-       //     game.debug.body(c);
-     //   });
-        game.debug.text(maingroup.countLiving() + ' / ' + maingroup.children.length, 2, 14);
-        game.debug.text(maingroup.countLiving(), 2, 14);
-        
-        // Input debug info
-       // game.debug.inputInfo(32, 32);
     }
-    
 };

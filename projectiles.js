@@ -114,7 +114,6 @@ var projectileTypes = [
             damages: [20],
             createProjectile: createProjectile9,
             collision: collisionProjectile9
-            
         }
     ];
 
@@ -224,15 +223,13 @@ function createProjectile(shooter, projectile) {
         p.source = shooter;
         p.collideHandler = t.collision;
         p.frame = t.frame + t.upgrade;
-        p.damage = t.damages[t.upgrade];
-        p.reset(shooter.x, shooter.y + 2);
-        
+ 
         if (shooter === player) {
             p.body.velocity.x = t.speed;
         } else {
             p.body.velocity.x = -t.speed;
         }
-        
+
         if (t.createProjectile) {
             t.createProjectile(p, t, shooter);
         }
@@ -512,6 +509,22 @@ function createProjectile9(p, t, q) {
     } else {
         p.body.setSize(8, 15, 2, 1);
         p.scale.x = 1;
+    }
+}
+
+//----------------------------------------------------------------
+// projectile type 9
+function collisionProjectile9(p, q) {
+    'use strict';
+
+}
+
+function createProjectile9(p, t, q) {
+    'use strict';
+    if (q !== player) {
+        p.body.velocity.x = -t.speed;
+    } else {
+        p.body.velocity.x = t.speed;
     }
 }
 

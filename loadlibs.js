@@ -5,6 +5,7 @@ game.state.add("Boot", boot);
 game.state.add("Loading", loading);
 game.state.add("Runner", runner);
 game.state.add("mainMenu", mainMenu);
+game.state.add("controlScreen", controlScreen);
 
 
 // --

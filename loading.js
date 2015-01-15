@@ -48,6 +48,15 @@ loading.prototype = {
         this.load.image("title_text", "assets/titletext.png", 600, 46);
         this.load.spritesheet('mute_button', 'assets/mute_button.png', 64, 59);
         this.load.spritesheet('upgrade_button', 'assets/upgrade_button.png', 177, 37);
+
+        this.load.image("startButton", "assets/startButton.png");
+        this.load.image("controlsButton", "assets/controlsButton.png");
+        this.load.image("creditsButton", "assets/creditsButton.png");
+        this.load.spritesheet('soundButton', 'assets/soundButton.png', 65, 64);
+        this.load.image('title', 'assets/gameTitle.png');
+        
+        this.load.image('closeButton', 'assets/closeButton.png');
+        this.load.image('controls', 'assets/controlScreen.png');
     },
     
     create: function () {
