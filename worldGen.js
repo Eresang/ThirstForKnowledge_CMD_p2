@@ -10,4 +10,13 @@ function worldGenerator () {
             spawnObstacle(randomx, randomy, i);
         }        
     }
+    
+    for (i = 0; i < enemyArray.length; i++) {
+        
+        if (enemyArray[i].exists === false) {
+            randomx = Math.random() * game.world.width + game.world.width;
+            randomy = Math.random() * game.world.height;
+            spawnEnemy(randomx, randomy, i);
+        }        
+    }
 }

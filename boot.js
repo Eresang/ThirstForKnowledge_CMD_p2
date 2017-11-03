@@ -2,7 +2,7 @@
 var gameWidth = 640,
     gameHeight = 480;
 // create the game object and set it to create a canvas in parent container 'gameDiv'
-var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameDiv');
+var game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameDiv', null, false, false);
 
 // the 'boot' game state;
 // it loads the loading bar graphic and sets up a couple of scaling options,
@@ -21,15 +21,15 @@ boot.prototype = {
     create: function () {
         'use strict';
         // set up scale manager
-	this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+	    this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         this.scale.minWidth = gameWidth / 2;
         this.scale.minHeight = gameHeight / 2;
-        this.scale.maxWidth = gameWidth;
-        this.scale.maxHeight = gameHeight;
-	this.scale.pageAlignHorizontally = true;
+        this.scale.maxWidth = gameWidth * 4;
+        this.scale.maxHeight = gameHeight * 4;
+	    this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
         // refresh layout
-	this.scale.refresh();
-	this.state.start("Loading");
+	    this.scale.refresh();
+	    this.state.start("Loading");
     }
 };

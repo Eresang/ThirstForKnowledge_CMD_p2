@@ -8,35 +8,43 @@ var runner = function (game) {
 
 runner.prototype = {
     create: function () {
-        
         'use strict';
-        game.stage.backgroundColor = "#9d00ff";
-        maingroup = game.add.group();
-        initProjectiles();
-        initPlayer();
-        
-        //starts advanced timing for fps debugger
-        game.time.advancedTiming = true;
-        // starts the physics engine
+        game.stage.backgroundColor = "#dec56f";
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
-        game.stage.backgroundColor = "#9d00ff";
-        maingroup = game.add.group();        
+        initGenerator();
+        maingroup = game.add.group();
         
-        addEnemiesToArray();
-        spawnEnemy();
-        
-        addObstaclesToArray();
-        //spawnObstacle();
+        interfacegroup = game.add.group();
+
+        initPlayer();
+        initStatusbar();
+        initObstacles();
+        initScenery();
+        initPickups();
+        initProjectiles();
+        initEnemies();
+        initLevel();
     },
     
     update: function () {
         'use strict';
         checkPlayerInput();
         updateProjectiles();
+        incrementFireCounters();
+        
         collisionHandler();
+        generateLevel();
+        
         killObstacles();
-        worldGenerator();
+        killScenery();
+        killEnemies();
+        killPickups();
+        killProjectiles();
+        
+        enemyAI();
+        maingroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },
     
     init: function () {
@@ -45,7 +53,7 @@ runner.prototype = {
     },
     
     render: function () {
-        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        'use strict';
+
     }
-    
 };
